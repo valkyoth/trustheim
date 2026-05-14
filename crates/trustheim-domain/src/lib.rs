@@ -1,6 +1,6 @@
 #![forbid(unsafe_code)]
 
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, Deserializer, Serialize, de};
 use std::error::Error;
 use std::fmt::{self, Display};
 use utoipa::ToSchema;
@@ -10,7 +10,7 @@ const MAX_DNS_NAME_LEN: usize = 253;
 const MAX_CSR_PEM_BYTES: usize = 64 * 1024;
 const MAX_TTL_SECONDS: u64 = 398 * 24 * 60 * 60;
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, ToSchema)]
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, ToSchema)]
 #[serde(transparent)]
 pub struct CertificateProfileName(String);
 
@@ -26,7 +26,16 @@ impl CertificateProfileName {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, ToSchema)]
+impl<'de> Deserialize<'de> for CertificateProfileName {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::parse(String::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, ToSchema)]
 #[serde(transparent)]
 pub struct IssuerRef(String);
 
@@ -42,7 +51,16 @@ impl IssuerRef {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, ToSchema)]
+impl<'de> Deserialize<'de> for IssuerRef {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::parse(String::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, ToSchema)]
 #[serde(transparent)]
 pub struct DnsName(String);
 
@@ -59,7 +77,16 @@ impl DnsName {
     }
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, Deserialize, ToSchema)]
+impl<'de> Deserialize<'de> for DnsName {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::parse(String::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Serialize, ToSchema)]
 #[serde(transparent)]
 pub struct CertificateTtlSeconds(u64);
 
@@ -79,7 +106,16 @@ impl CertificateTtlSeconds {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Serialize, Deserialize, ToSchema)]
+impl<'de> Deserialize<'de> for CertificateTtlSeconds {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::new(u64::deserialize(deserializer)?).map_err(de::Error::custom)
+    }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Serialize, ToSchema)]
 #[serde(transparent)]
 pub struct CsrPem(String);
 
@@ -118,6 +154,15 @@ impl CsrPem {
 
     pub fn as_str(&self) -> &str {
         &self.0
+    }
+}
+
+impl<'de> Deserialize<'de> for CsrPem {
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: Deserializer<'de>,
+    {
+        Self::parse(String::deserialize(deserializer)?).map_err(de::Error::custom)
     }
 }
 
@@ -266,5 +311,14 @@ mod tests {
         assert_eq!(CertificateTtlSeconds::new(3600).unwrap().get(), 3600);
         assert!(CertificateTtlSeconds::new(0).is_err());
         assert!(CertificateTtlSeconds::new(MAX_TTL_SECONDS + 1).is_err());
+    }
+
+    #[test]
+    fn serde_deserialization_enforces_validation() {
+        let invalid_dns = serde_json::from_str::<DnsName>(r#""*.example.internal""#);
+        assert!(invalid_dns.is_err());
+
+        let invalid_ttl = serde_json::from_str::<CertificateTtlSeconds>("0");
+        assert!(invalid_ttl.is_err());
     }
 }

@@ -12,4 +12,5 @@ serde_json.workspace = true
 tokio.workspace = true
 trustheim-api.workspace = true
 trustheim-backend.workspace = true
+trustheim-domain.workspace = true
 utoipa.workspace = true

@@ -36,5 +36,40 @@ grep -q '"csr_signing":false' /tmp/trustheim-smoke-capabilities.json
 curl -sSf "${base_url}/api/openapi.json" >/tmp/trustheim-smoke-openapi.json
 grep -q '"/health"' /tmp/trustheim-smoke-openapi.json
 grep -q '"/api/v1/backend/capabilities"' /tmp/trustheim-smoke-openapi.json
+grep -q '"/api/v1/certificates/sign-csr"' /tmp/trustheim-smoke-openapi.json
+
+cat >/tmp/trustheim-smoke-sign-csr.json <<'JSON'
+{
+  "profile": "server-modern",
+  "issuer": "ops-intermediate",
+  "csr_pem": "-----BEGIN CERTIFICATE REQUEST-----\nMIIB\n-----END CERTIFICATE REQUEST-----\n",
+  "dns_sans": ["api.example.internal"],
+  "ttl": 3600
+}
+JSON
+
+status="$(curl -sS -o /tmp/trustheim-smoke-sign-csr-response.json -w "%{http_code}" \
+    -H "content-type: application/json" \
+    --data @/tmp/trustheim-smoke-sign-csr.json \
+    "${base_url}/api/v1/certificates/sign-csr")"
+test "$status" = "503"
+grep -q '"code":"unsupported"' /tmp/trustheim-smoke-sign-csr-response.json
+
+cat >/tmp/trustheim-smoke-invalid-sign-csr.json <<'JSON'
+{
+  "profile": "Server Modern",
+  "issuer": "ops-intermediate",
+  "csr_pem": "-----BEGIN CERTIFICATE REQUEST-----\nMIIB\n-----END CERTIFICATE REQUEST-----\n",
+  "dns_sans": ["*.example.internal"],
+  "ttl": 0
+}
+JSON
+
+status="$(curl -sS -o /tmp/trustheim-smoke-invalid-sign-csr-response.txt -w "%{http_code}" \
+    -H "content-type: application/json" \
+    --data @/tmp/trustheim-smoke-invalid-sign-csr.json \
+    "${base_url}/api/v1/certificates/sign-csr")"
+test "$status" = "422"
+grep -q '"code":"invalid_request"' /tmp/trustheim-smoke-invalid-sign-csr-response.txt
 
 echo "smoke api: ok"

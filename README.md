@@ -19,6 +19,7 @@ The starting architecture and roadmap are:
 
 - [Architecture](docs/architecture.md)
 - [Application Boundaries](docs/app-boundaries.md)
+- [API](docs/api.md)
 - [Backend Provider Interface](docs/backend-provider-interface.md)
 - [Native Binary Deployment](docs/deploy/native-binaries.md)
 - [Versioning Plan](docs/versioning-plan.md)

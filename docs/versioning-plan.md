@@ -69,6 +69,8 @@ Scope:
 - Provider boundary with OpenBao as the first `CaBackend` adapter and HashiCorp
   Vault reserved as a future adapter.
 - Axum API skeleton.
+- Initial provider-neutral certificate signing route with validating request
+  types and rejecting backend behavior until the first backend is configured.
 - Separate placeholder web and CLI app crates that use only the public API
   contract.
 - OpenAPI generation.
@@ -82,6 +84,7 @@ Exit criteria:
 - No route exists without an authorization classification.
 - Public API DTOs contain no OpenBao-specific mount, role, or token fields.
 - Web and CLI crates do not depend on backend provider crates.
+- Invalid certificate request JSON is rejected before reaching any backend.
 
 ### v0.4: Identity And Quorum State
 

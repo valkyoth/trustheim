@@ -7,6 +7,7 @@ test -s LICENSE
 test -s SECURITY.md
 test -s docs/architecture.md
 test -s docs/app-boundaries.md
+test -s docs/api.md
 test -s docs/backend-provider-interface.md
 test -s docs/versioning-plan.md
 test -s docs/openbao-operations-plan.md

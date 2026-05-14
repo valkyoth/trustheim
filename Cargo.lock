@@ -455,6 +455,7 @@ dependencies = [
  "tokio",
  "trustheim-api",
  "trustheim-backend",
+ "trustheim-domain",
  "utoipa",
 ]
 
@@ -486,6 +487,7 @@ name = "trustheim-domain"
 version = "0.1.0"
 dependencies = [
  "serde",
+ "serde_json",
  "utoipa",
 ]
 
