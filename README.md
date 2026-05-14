@@ -18,6 +18,7 @@ as executable checks and pass on tagged source.
 The starting architecture and roadmap are:
 
 - [Architecture](docs/architecture.md)
+- [Backend Provider Interface](docs/backend-provider-interface.md)
 - [Versioning Plan](docs/versioning-plan.md)
 - [OpenBao Operations Plan](docs/openbao-operations-plan.md)
 - [Security And Release Gates](docs/security-and-release-gates.md)
@@ -29,6 +30,11 @@ Trustheim must never become a private-key storage product. The Rust service is a
 ceremony orchestrator and typed API gateway. It may hold short-lived request
 state, WebAuthn challenges, OpenBao client credentials, and certificate request
 metadata, but it must not store CA private keys or exportable intermediate keys.
+
+OpenBao is the first supported backend provider, not a permanent hardcoded
+dependency. The public Trustheim API must stay provider-neutral so future
+support for HashiCorp Vault or another compatible policy engine can be added
+behind a narrow provider interface.
 
 High-value signing operations require:
 

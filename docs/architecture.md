@@ -1,9 +1,9 @@
 # Architecture
 
 Trustheim uses the Sovereign-Gate architecture: a small Rust API and UI service
-orchestrates certificate ceremonies, OpenBao enforces PKI policy and audit, and
-hardware-backed cryptographic material sits outside the application trust
-boundary.
+orchestrates certificate ceremonies, a pluggable backend provider enforces PKI
+policy and audit, and hardware-backed cryptographic material sits outside the
+application trust boundary. OpenBao is the first provider target.
 
 ## Primary Goal
 
@@ -39,7 +39,7 @@ Non-responsibilities:
 - No direct root CA signing endpoint in the normal application runtime.
 - No unaudited administrative bypass.
 
-### Tier 2: OpenBao Policy Engine
+### Tier 2: Backend Policy Engine
 
 Responsibilities:
 
@@ -54,6 +54,12 @@ Responsibilities:
 OpenBao PKI mounts must be separated by CA purpose. Do not mix roots,
 intermediates, lab CAs, and production issuers in one mount just because the
 engine supports multiple issuers.
+
+The Rust domain layer must talk to a `CaBackend` capability interface, not to
+OpenBao route strings directly. Provider-specific code belongs in adapter crates
+such as `trustheim-backend-openbao` and future `trustheim-backend-vault`.
+Provider-specific differences are allowed in deployment configuration and
+bootstrap tooling, but not in public certificate-request DTOs.
 
 ### Tier 3: Cryptographic Vault
 

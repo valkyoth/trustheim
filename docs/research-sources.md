@@ -36,6 +36,17 @@ Checked on 2026-05-14 from local tooling and upstream documentation.
   join/bootstrap paths. Multiple audit devices are recommended.
 - OpenBao ACME supports EAB and recommends EAB for public-facing deployments.
 
+## HashiCorp Vault Findings
+
+- HashiCorp Vault exposes HTTP APIs for secrets engines, including PKI.
+- Vault secrets engines are enabled at configurable paths and then interacted
+  with directly at that path.
+- Vault audit devices record API requests and responses, with documented system
+  endpoint exceptions and operational best-practice requirements.
+- Vault is a plausible future backend provider, but it needs its own adapter,
+  bootstrap automation, policy tests, audit tests, and license/deployment review
+  before it can be called stable.
+
 ## Local Project Patterns Reviewed
 
 ### base64-ng
@@ -79,4 +90,7 @@ Useful patterns:
 - OpenBao PKI considerations: https://openbao.org/docs/secrets/pki/considerations/
 - OpenBao PKCS#11 seal: https://openbao.org/docs/configuration/seal/pkcs11/
 - OpenBao audit devices: https://openbao.org/docs/audit/
+- HashiCorp Vault PKI: https://developer.hashicorp.com/vault/docs/secrets/pki
+- HashiCorp Vault audit devices: https://developer.hashicorp.com/vault/docs/audit
+- HashiCorp Vault secrets engines: https://developer.hashicorp.com/vault/docs/secrets
 - webauthn-rs docs.rs: https://docs.rs/crate/webauthn-rs/latest

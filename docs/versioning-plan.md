@@ -63,6 +63,8 @@ Scope:
 
 - Rust 1.95.0 or newer current stable toolchain.
 - Workspace crates for API DTOs, config, OpenBao client, auth, and server.
+- Provider boundary with OpenBao as the first `CaBackend` adapter and HashiCorp
+  Vault reserved as a future adapter.
 - Axum API skeleton.
 - OpenAPI generation.
 - Strict config parser.
@@ -73,6 +75,7 @@ Exit criteria:
 - `cargo fmt`, `cargo clippy -- -D warnings`, and `cargo test` pass.
 - OpenAPI document is generated and checked into release evidence.
 - No route exists without an authorization classification.
+- Public API DTOs contain no OpenBao-specific mount, role, or token fields.
 
 ### v0.4: Identity And Quorum State
 
@@ -93,9 +96,10 @@ Exit criteria:
 - Quorum tests prove one person cannot approve their own critical request.
 - API responses do not expose internal ids unnecessarily.
 
-### v0.5: OpenBao Bootstrap And Policy Automation
+### v0.5: OpenBao Provider Bootstrap And Policy Automation
 
-Goal: automate OpenBao in the style of repoheim but for PKI.
+Goal: automate the first provider, OpenBao, in the style of repoheim but for
+PKI.
 
 Scope:
 
@@ -104,6 +108,7 @@ Scope:
   and short-lived application tokens.
 - mTLS assets for local development.
 - Policy tests for allowed and denied paths.
+- Shared backend contract test suite for provider adapters.
 
 Exit criteria:
 
@@ -111,6 +116,8 @@ Exit criteria:
   tested from scripts.
 - Policies deny root and intermediate paths to the runtime orchestrator role.
 - Audit devices are enabled before certificate operations.
+- The provider contract can be run against the OpenBao adapter without changing
+  Trustheim API code.
 
 ### v0.6: CSR Signing MVP
 
@@ -266,3 +273,27 @@ Exit criteria:
 
 - Each promoted profile has its own threat model, API tests, fuzz targets, and
   release gate additions.
+
+### v1.4: Additional Backend Provider
+
+Goal: add a second policy-engine backend without changing Trustheim's public
+API.
+
+Likely first target:
+
+- HashiCorp Vault PKI.
+
+Scope:
+
+- `trustheim-backend-vault` adapter.
+- Vault bootstrap automation.
+- Vault-specific policy, audit, seal, and PKI smoke tests.
+- Provider capability matrix in documentation.
+- Migration and interoperability notes for OpenBao and Vault deployments.
+
+Exit criteria:
+
+- Shared backend contract tests pass for both OpenBao and Vault.
+- Public API and UI need no provider-specific DTO changes.
+- Vault-specific limitations are documented and downgrade security claims where
+  needed.

@@ -1,7 +1,8 @@
 # OpenBao Operations Plan
 
-OpenBao is the policy engine and audit anchor for Trustheim. The Rust service
-must be replaceable without losing CA policy, audit history, or key custody.
+OpenBao is the first policy engine and audit anchor for Trustheim. The Rust
+service must treat it as a provider adapter, so another backend such as
+HashiCorp Vault can be added later without changing Trustheim's public API.
 
 ## Baseline Version
 
@@ -68,6 +69,10 @@ scripts/openbao_bootstrap.py bootstrap
 scripts/openbao_bootstrap.py policy-test
 scripts/openbao_bootstrap.py audit-layout
 ```
+
+These commands are provider-specific. The runtime server should call only the
+shared backend interface described in
+[Backend Provider Interface](backend-provider-interface.md).
 
 ## Audit
 

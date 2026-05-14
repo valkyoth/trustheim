@@ -15,6 +15,9 @@ produces evidence.
 - Keep OpenBao root tokens and HSM PINs out of normal runtime.
 - Do not accept prerelease crates for stable releases without a written
   security exception.
+- Keep the Trustheim public API provider-neutral. Backend-specific mount paths,
+  issuer ids, roles, and tokens belong in provider adapters and internal audit
+  metadata.
 
 ## Required Local Gates
 
@@ -31,6 +34,7 @@ scripts/generate-sbom.sh
 scripts/reproducible_build_check.sh
 scripts/openbao_policy_smoke.sh
 scripts/api_contract_check.sh
+scripts/backend_contract_check.sh
 ```
 
 The stable gate must add:
@@ -95,6 +99,7 @@ CI must run:
 - Dependency policy.
 - Audit.
 - OpenAPI generation consistency.
+- Backend provider contract tests.
 - Local OpenBao policy smoke when container runtime is available.
 
 ## Release Evidence
