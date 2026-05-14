@@ -23,16 +23,21 @@ The reusable crates are:
 
 ## Deployment Boundary
 
-Production deployment should use separate processes and separate containers:
+Production deployment should use separate processes. Rootless Podman is the
+recommended hardened deployment path for operators who want containers, but it
+must not be required. Every runnable app should also work as a normal native
+binary under a service manager such as systemd, s6, runit, OpenRC, or a simple
+operator shell during testing.
 
-- API container: `trustheim-api-server`.
-- Web container: `trustheim-web`, when enabled.
+- API process or container: `trustheim-api-server`.
+- Web process or container: `trustheim-web`, when enabled.
 - CLI binary or utility container: `trustheim-cli`, when useful for operators.
-- Backend provider container or external service: OpenBao first, Vault later.
+- Backend provider process, container, or external service: OpenBao first, Vault
+  later.
 
-The web app should be disposable from a security point of view. If the web
-container is compromised, the attacker still has only the public API surface,
-not direct OpenBao/Vault access and not CA private key custody.
+The web app should be disposable from a security point of view. If the web app
+process or container is compromised, the attacker still has only the public API
+surface, not direct OpenBao/Vault access and not CA private key custody.
 
 ## Repository Boundary
 
@@ -61,3 +66,17 @@ Allowed dependency direction:
 - CLI may depend on `trustheim-api` and an HTTP client only.
 - Web and CLI must not depend on `trustheim-backend-openbao`,
   `trustheim-backend-vault`, or any provider bootstrap crate.
+
+## Native Binary Rule
+
+Container packaging must wrap the same binaries that operators can run
+directly. Do not put required runtime behavior only in a container entrypoint.
+
+Required standalone binaries:
+
+- `trustheim-api-server`
+- `trustheim-web`
+- `trustheim-cli`
+
+The release gate must build all of them outside a container before any Podman
+image build is considered valid.

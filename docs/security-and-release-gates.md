@@ -30,6 +30,7 @@ cargo fmt --all --check
 cargo clippy --workspace --all-targets --all-features -- -D warnings
 cargo test --workspace --all-targets
 cargo test --workspace --doc
+cargo build --workspace --bins
 cargo deny check
 cargo audit
 scripts/generate-sbom.sh
@@ -103,6 +104,7 @@ CI must run:
 - OpenAPI generation consistency.
 - Backend provider contract tests.
 - App boundary checks proving web and CLI do not depend on backend adapters.
+- Native binary builds for API server, web, and CLI.
 - Local OpenBao policy smoke when container runtime is available.
 
 ## Release Evidence

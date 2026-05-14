@@ -10,6 +10,7 @@ test -s docs/app-boundaries.md
 test -s docs/backend-provider-interface.md
 test -s docs/versioning-plan.md
 test -s docs/openbao-operations-plan.md
+test -s docs/deploy/native-binaries.md
 test -s docs/deploy/podman/README.md
 test -s docs/security-and-release-gates.md
 test -s docs/research-sources.md
@@ -56,6 +57,9 @@ if [ -f Cargo.toml ]; then
 
     echo "checks: tests"
     cargo test --workspace --all-targets
+
+    echo "checks: standalone binaries"
+    cargo build --workspace --bins
 
     if [ "${TRUSTHEIM_CHECK_API_SMOKE:-0}" = "1" ]; then
         echo "checks: local API smoke"

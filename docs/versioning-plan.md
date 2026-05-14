@@ -27,6 +27,8 @@ Scope:
 - GitHub CI placeholder for documentation checks.
 - `scripts/checks.sh` and `scripts/stable_release_gate.sh`.
 - Dependency policy draft for future Rust workspace.
+- Native binary deployment documented as first-class; Podman remains optional
+  packaging.
 
 Exit criteria:
 
@@ -166,6 +168,7 @@ Goal: run the lab stack like production.
 Scope:
 
 - Rootless Podman compose.
+- Native binary deployment examples.
 - Hardened systemd units.
 - TLS/mTLS file permission checks.
 - Container image build and smoke tests.
@@ -176,6 +179,7 @@ Exit criteria:
 - Podman smoke passes from a clean checkout.
 - Restore test can recover inventory and prove audit continuity.
 - Secrets are injected through files or OpenBao, not baked into images.
+- Native binary users can run the same release artifacts without Podman.
 
 ### v0.9: Release Candidate Hardening
 

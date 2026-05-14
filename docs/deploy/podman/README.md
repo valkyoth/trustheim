@@ -1,7 +1,8 @@
 # Podman Deployment Boundary
 
 Trustheim should ship separate rootless container images for separate trust
-roles:
+roles, but these images are packaging around the same native binaries documented
+in [Native Binary Deployment](../native-binaries.md):
 
 - `trustheim-api-server`: public API, authentication, authorization, audit
   correlation, and backend-provider calls.
@@ -16,4 +17,5 @@ should receive only the API base URL and their own client configuration.
 
 The first real Podman milestone should add image builds and smoke tests for the
 API server only. Web and CLI images should be added when those apps have real
-runtime behavior.
+runtime behavior. A Podman smoke test does not replace the native binary build
+gate.

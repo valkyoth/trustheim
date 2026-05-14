@@ -157,3 +157,10 @@ Trustheim does not store:
 
 Long-lived secrets belong in OpenBao or in rootless container/systemd secret
 injection with file permissions checked before startup.
+
+## Deployment Shape
+
+Trustheim must not require Podman. The API server, web app, and CLI are normal
+Rust binaries first. Rootless Podman images and native service-manager units
+should wrap the same binaries and preserve the same configuration and security
+boundaries.

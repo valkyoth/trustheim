@@ -20,6 +20,7 @@ The starting architecture and roadmap are:
 - [Architecture](docs/architecture.md)
 - [Application Boundaries](docs/app-boundaries.md)
 - [Backend Provider Interface](docs/backend-provider-interface.md)
+- [Native Binary Deployment](docs/deploy/native-binaries.md)
 - [Versioning Plan](docs/versioning-plan.md)
 - [OpenBao Operations Plan](docs/openbao-operations-plan.md)
 - [Security And Release Gates](docs/security-and-release-gates.md)
@@ -62,3 +63,15 @@ The first Rust milestone includes a provider-neutral workspace, a separate Axum
 API server app, placeholder CLI and web app crates, OpenAPI output, and a
 rejecting backend placeholder. Later milestones will add SBOM, reproducibility,
 fuzz, OpenBao bootstrap, Podman smoke, and provider contract checks.
+
+Build all standalone binaries:
+
+```bash
+cargo build --bins
+```
+
+Run the API server locally:
+
+```bash
+TRUSTHEIM_BIND_ADDR=127.0.0.1:8787 cargo run -p trustheim-api-server
+```
