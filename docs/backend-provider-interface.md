@@ -44,15 +44,19 @@ Planned Rust workspace split:
 - `trustheim-domain`: provider-neutral request, approval, certificate, and
   policy types.
 - `trustheim-api`: HTTP DTOs and OpenAPI schema.
+- `trustheim-api-server`: API service, auth, state, and routing.
 - `trustheim-backend`: provider trait, capability model, and shared test suite.
 - `trustheim-backend-openbao`: OpenBao implementation.
 - `trustheim-backend-vault`: future HashiCorp Vault implementation.
-- `trustheim-server`: Axum server wiring, auth, state, and routing.
+- `trustheim-web`: optional web interface client.
+- `trustheim-cli`: optional command-line client.
 - `trustheim-bootstrap-openbao`: OpenBao bootstrap automation.
 - `trustheim-bootstrap-vault`: future Vault bootstrap automation.
 
-`trustheim-server` may depend on `trustheim-backend`, but must not import
-OpenBao or Vault HTTP route constants directly.
+`trustheim-api-server` may depend on `trustheim-backend`, but must not import
+OpenBao or Vault HTTP route constants directly. `trustheim-web` and
+`trustheim-cli` must not depend on backend provider crates at all; they call the
+public API.
 
 ## Capability Interface
 

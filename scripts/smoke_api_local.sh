@@ -4,7 +4,7 @@ set -eu
 addr="${TRUSTHEIM_SMOKE_ADDR:-127.0.0.1:18787}"
 base_url="http://${addr}"
 
-TRUSTHEIM_BIND_ADDR="$addr" cargo run -p trustheim-server >/tmp/trustheim-smoke-api.log 2>&1 &
+TRUSTHEIM_BIND_ADDR="$addr" cargo run -p trustheim-api-server >/tmp/trustheim-smoke-api.log 2>&1 &
 server_pid="$!"
 
 cleanup() {

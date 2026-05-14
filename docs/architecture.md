@@ -1,9 +1,10 @@
 # Architecture
 
-Trustheim uses a split-control architecture: a small Rust API and UI service
-orchestrates certificate ceremonies, a pluggable backend provider enforces PKI
-policy and audit, and hardware-backed cryptographic material sits outside the
-application trust boundary. OpenBao is the first provider target.
+Trustheim uses a split-control architecture: a Rust API service orchestrates
+certificate ceremonies, a pluggable backend provider enforces PKI policy and
+audit, and hardware-backed cryptographic material sits outside the application
+trust boundary. OpenBao is the first provider target. The web interface and CLI
+are separate API clients, not part of the backend trust boundary.
 
 ## Primary Goal
 
@@ -23,7 +24,9 @@ Responsibilities:
 - API-first certificate request, approval, revocation, inventory, and audit
   workflow.
 - Axum HTTP API with OpenAPI generated from typed request and response models.
-- Optional Leptos UI, backed only by the public API.
+- Optional web UI, backed only by the public API and deployed as a separate app.
+- Optional CLI, backed only by the public API and deployed as a separate app or
+  operator binary.
 - WebAuthn registration and authentication using hardware-backed authenticators.
 - Typed validation for common names, DNS SANs, IP SANs, URI SANs, requested
   TTL, certificate profile, and requester identity.

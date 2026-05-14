@@ -18,6 +18,8 @@ produces evidence.
 - Keep the Trustheim public API provider-neutral. Backend-specific mount paths,
   issuer ids, roles, and tokens belong in provider adapters and internal audit
   metadata.
+- Keep web and CLI as separate API clients. They must not import backend
+  provider crates or gain private routes unavailable to other API clients.
 
 ## Required Local Gates
 
@@ -100,6 +102,7 @@ CI must run:
 - Audit.
 - OpenAPI generation consistency.
 - Backend provider contract tests.
+- App boundary checks proving web and CLI do not depend on backend adapters.
 - Local OpenBao policy smoke when container runtime is available.
 
 ## Release Evidence

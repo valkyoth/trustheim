@@ -447,6 +447,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "trustheim-api-server"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "serde_json",
+ "tokio",
+ "trustheim-api",
+ "trustheim-backend",
+ "utoipa",
+]
+
+[[package]]
 name = "trustheim-backend"
 version = "0.1.0"
 dependencies = [
@@ -466,6 +478,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "trustheim-cli"
+version = "0.1.0"
+
+[[package]]
 name = "trustheim-domain"
 version = "0.1.0"
 dependencies = [
@@ -474,16 +490,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "trustheim-server"
+name = "trustheim-web"
 version = "0.1.0"
-dependencies = [
- "axum",
- "serde_json",
- "tokio",
- "trustheim-api",
- "trustheim-backend",
- "utoipa",
-]
 
 [[package]]
 name = "unicode-ident"

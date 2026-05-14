@@ -62,10 +62,13 @@ Goal: create a minimal Rust service with the public API shape fixed.
 Scope:
 
 - Rust 1.95.0 or newer current stable toolchain.
-- Workspace crates for API DTOs, config, OpenBao client, auth, and server.
+- Workspace crates for API DTOs, config, backend adapters, API server, web app,
+  CLI app, and auth.
 - Provider boundary with OpenBao as the first `CaBackend` adapter and HashiCorp
   Vault reserved as a future adapter.
 - Axum API skeleton.
+- Separate placeholder web and CLI app crates that use only the public API
+  contract.
 - OpenAPI generation.
 - Strict config parser.
 - `#![forbid(unsafe_code)]` in Trustheim crates.
@@ -76,6 +79,7 @@ Exit criteria:
 - OpenAPI document is generated and checked into release evidence.
 - No route exists without an authorization classification.
 - Public API DTOs contain no OpenBao-specific mount, role, or token fields.
+- Web and CLI crates do not depend on backend provider crates.
 
 ### v0.4: Identity And Quorum State
 

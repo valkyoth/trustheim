@@ -1,10 +1,12 @@
 [workspace]
 members = [
     "crates/trustheim-api",
+    "crates/trustheim-api-server",
     "crates/trustheim-backend",
     "crates/trustheim-backend-openbao",
+    "crates/trustheim-cli",
     "crates/trustheim-domain",
-    "crates/trustheim-server",
+    "crates/trustheim-web",
 ]
 resolver = "3"
 
@@ -23,9 +25,12 @@ tokio = { version = "1.52.3", default-features = false, features = ["macros", "n
 utoipa = "5.5.0"
 
 trustheim-api = { version = "0.1.0", path = "crates/trustheim-api" }
+trustheim-api-server = { version = "0.1.0", path = "crates/trustheim-api-server" }
 trustheim-backend = { version = "0.1.0", path = "crates/trustheim-backend" }
 trustheim-backend-openbao = { version = "0.1.0", path = "crates/trustheim-backend-openbao" }
+trustheim-cli = { version = "0.1.0", path = "crates/trustheim-cli" }
 trustheim-domain = { version = "0.1.0", path = "crates/trustheim-domain" }
+trustheim-web = { version = "0.1.0", path = "crates/trustheim-web" }
 
 [profile.release]
 panic = "abort"

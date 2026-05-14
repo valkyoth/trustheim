@@ -18,6 +18,7 @@ as executable checks and pass on tagged source.
 The starting architecture and roadmap are:
 
 - [Architecture](docs/architecture.md)
+- [Application Boundaries](docs/app-boundaries.md)
 - [Backend Provider Interface](docs/backend-provider-interface.md)
 - [Versioning Plan](docs/versioning-plan.md)
 - [OpenBao Operations Plan](docs/openbao-operations-plan.md)
@@ -57,7 +58,7 @@ scripts/checks.sh
 scripts/stable_release_gate.sh check
 ```
 
-The first Rust milestone includes a provider-neutral workspace, an Axum API
-skeleton, OpenAPI output, and a rejecting backend placeholder. Later milestones
-will add `cargo deny`, `cargo audit`, SBOM, reproducibility, fuzz, OpenBao
-bootstrap, Podman smoke, and provider contract checks.
+The first Rust milestone includes a provider-neutral workspace, a separate Axum
+API server app, placeholder CLI and web app crates, OpenAPI output, and a
+rejecting backend placeholder. Later milestones will add SBOM, reproducibility,
+fuzz, OpenBao bootstrap, Podman smoke, and provider contract checks.
