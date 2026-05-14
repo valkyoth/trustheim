@@ -36,4 +36,36 @@ grep -q "https://openbao.org/api-docs/secret/pki/" docs/research-sources.md
 grep -q "https://developer.hashicorp.com/vault/docs/secrets/pki" docs/research-sources.md
 grep -q "https://releases.rs/" docs/research-sources.md
 
+if [ -f Cargo.toml ]; then
+    echo "checks: formatting"
+    cargo fmt --all --check
+
+    echo "checks: clippy"
+    cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+    echo "checks: tests"
+    cargo test --workspace --all-targets
+
+    if [ "${TRUSTHEIM_CHECK_API_SMOKE:-0}" = "1" ]; then
+        echo "checks: local API smoke"
+        scripts/smoke_api_local.sh
+    else
+        echo "checks: skipping local API smoke; set TRUSTHEIM_CHECK_API_SMOKE=1 to enable"
+    fi
+
+    if cargo deny --version >/dev/null 2>&1; then
+        echo "checks: dependency policy"
+        cargo deny check
+    else
+        echo "checks: skipping cargo deny; cargo-deny is not installed"
+    fi
+
+    if cargo audit --version >/dev/null 2>&1; then
+        echo "checks: RustSec advisories"
+        cargo audit
+    else
+        echo "checks: skipping cargo audit; cargo-audit is not installed"
+    fi
+fi
+
 echo "checks: ok"

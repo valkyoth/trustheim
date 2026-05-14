@@ -1,9 +1,8 @@
 # Backend Provider Interface
 
 Trustheim should support more than one policy engine over time. OpenBao is the
-first backend because it is open-source and aligned with the sovereignty goal,
-but the architecture must not make OpenBao a permanent assumption in the public
-API.
+first backend because it is open-source and has a strong PKI/audit model, but
+the architecture must not make OpenBao a permanent assumption in the public API.
 
 HashiCorp Vault is the obvious future compatibility target because it also has
 HTTP APIs, PKI secrets engine mounts, token-based auth, audit devices, and

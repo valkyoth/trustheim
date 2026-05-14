@@ -1,6 +1,6 @@
 # Architecture
 
-Trustheim uses the Sovereign-Gate architecture: a small Rust API and UI service
+Trustheim uses a split-control architecture: a small Rust API and UI service
 orchestrates certificate ceremonies, a pluggable backend provider enforces PKI
 policy and audit, and hardware-backed cryptographic material sits outside the
 application trust boundary. OpenBao is the first provider target.

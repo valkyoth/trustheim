@@ -1,9 +1,9 @@
 # trustheim
 
-Trustheim is planned as an API-first private certificate authority orchestrator
-for European sovereign infrastructure. The core design is intentionally split:
-Rust validates identity and intent, OpenBao owns policy and audit, and an HSM or
-equivalent hardware-backed signer owns the CA private keys.
+Trustheim is planned as an API-first private certificate authority orchestrator.
+The core design is intentionally split: Rust validates identity and intent, a
+backend provider owns policy and audit, and an HSM or equivalent
+hardware-backed signer owns the CA private keys.
 
 Trustheim is licensed under the European Union Public Licence 1.2
 (`EUPL-1.2`).
@@ -57,6 +57,7 @@ scripts/checks.sh
 scripts/stable_release_gate.sh check
 ```
 
-The first Rust milestone will replace these documentation-only checks with
-`cargo fmt`, `cargo clippy`, `cargo test`, `cargo deny`, `cargo audit`, SBOM,
-reproducibility, fuzz, OpenBao bootstrap, Podman smoke, and API contract checks.
+The first Rust milestone includes a provider-neutral workspace, an Axum API
+skeleton, OpenAPI output, and a rejecting backend placeholder. Later milestones
+will add `cargo deny`, `cargo audit`, SBOM, reproducibility, fuzz, OpenBao
+bootstrap, Podman smoke, and provider contract checks.

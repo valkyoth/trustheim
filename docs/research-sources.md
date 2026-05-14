@@ -12,6 +12,8 @@ Checked on 2026-05-14 from local tooling and upstream documentation.
 - Axum: `cargo info axum` reports 0.8.9.
 - Tokio: `cargo info tokio` reports 1.52.3.
 - Tower HTTP: `cargo info tower-http` reports 0.6.10.
+- Serde: `cargo info serde` reports 1.0.228.
+- Serde JSON: `cargo info serde_json` reports 1.0.149.
 - Utoipa: `cargo info utoipa` reports 5.5.0.
 - Webauthn-rs: docs.rs latest stable page is 0.5.5. `cargo info` also shows a
   newer `0.6.1-dev`; stable Trustheim releases should avoid that prerelease

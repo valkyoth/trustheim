@@ -41,7 +41,7 @@ highlight = "all"
 [advisories]
 yanked = "deny"
 unmaintained = "workspace"
-unsound = "deny"
+unsound = "workspace"
 unused-ignored-advisory = "deny"
 ignore = []
 

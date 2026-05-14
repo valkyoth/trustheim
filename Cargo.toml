@@ -1,0 +1,33 @@
+[workspace]
+members = [
+    "crates/trustheim-api",
+    "crates/trustheim-backend",
+    "crates/trustheim-backend-openbao",
+    "crates/trustheim-domain",
+    "crates/trustheim-server",
+]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.95"
+license = "EUPL-1.2"
+repository = "https://github.com/valkyoth/trustheim"
+
+[workspace.dependencies]
+axum = { version = "0.8.9", default-features = false, features = ["http1", "json", "tokio"] }
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+tokio = { version = "1.52.3", default-features = false, features = ["macros", "net", "rt-multi-thread", "signal"] }
+utoipa = "5.5.0"
+
+trustheim-api = { version = "0.1.0", path = "crates/trustheim-api" }
+trustheim-backend = { version = "0.1.0", path = "crates/trustheim-backend" }
+trustheim-backend-openbao = { version = "0.1.0", path = "crates/trustheim-backend-openbao" }
+trustheim-domain = { version = "0.1.0", path = "crates/trustheim-domain" }
+
+[profile.release]
+panic = "abort"
+lto = "thin"
+codegen-units = 1
