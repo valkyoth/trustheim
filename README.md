@@ -1,4 +1,25 @@
-# trustheim
+<p align="center">
+  <b>API-first private certificate authority orchestrator built in Rust.</b><br>
+  Provider-neutral by design. Secure by default. Ready for native binaries and rootless containers.
+</p>
+
+<div align="center">
+  <a href="docs/api.md">API</a>
+  ·
+  <a href="docs/app-boundaries.md">App Boundaries</a>
+  ·
+  <a href="docs/versioning-plan.md">Versioning Plan</a>
+  ·
+  <a href="SECURITY.md">Security</a>
+</div>
+
+<br>
+
+<p align="center">
+  <img src="./.github/images/trustheim.webp" alt="Trustheim overview">
+</p>
+
+# Trustheim
 
 Trustheim is planned as an API-first private certificate authority orchestrator.
 The core design is intentionally split: Rust validates identity and intent, a
