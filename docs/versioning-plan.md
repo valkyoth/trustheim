@@ -112,6 +112,11 @@ Goal:
 - Support package signing and optional encryption for removable-media transfer,
   deterministic ceremony transcripts, audit import, and malware-scanning/media
   handling procedures.
+- Make ceremony-package encryption policy-driven: optional for public lab
+  ceremonies, normally required for production/offline root ceremonies, with
+  recipient keys and algorithms explicitly configured. Signing is always
+  mandatory, and decryption occurs only in the intended offline ceremony
+  environment.
 - Provide an offline verification CLI with no provider or runtime credentials.
 
 Exit criteria:
@@ -127,6 +132,9 @@ Exit criteria:
   and authorized constraints.
 - Trustheim coordinates and verifies offline ceremonies without running the
   offline root signer itself.
+- Ceremony package golden vectors include canonical input fields, expected bytes,
+  digest, signature input, expected verification result, mutated negative cases,
+  unknown-version cases, and unknown-critical-field cases.
 
 ### v0.5.0: Secret, Log, Crash, And Temporary-Data Hygiene
 
@@ -251,11 +259,17 @@ Goal:
   client keys, overlay verification keys, and challenge-MAC keys.
 - Define custody, generation, injection, key IDs, rotation overlap, revocation,
   backup, disaster recovery, missing-key behavior, and historical verification.
+- Define trust-anchor distribution for web, CLI, and offline verifiers: initial
+  provisioning, rotation overlap, revocation and emergency replacement,
+  historical receipt verification, offline verifier updates, and prevention of
+  server-supplied trust-key substitution.
 
 Exit criteria:
 - Signed records include key IDs.
 - Rotation tests verify old audit checkpoints and reject expired signing keys.
 - Missing or expired keys fail closed with redacted errors.
+- Client and offline-verifier receipt trust anchors can be rotated without
+  breaking historical verification.
 
 ### v0.11.0: Public API/Domain/Backend Dependency Inversion
 
@@ -329,6 +343,8 @@ Goal:
   HttpOnly, SameSite, session fixation prevention, absolute and idle session
   expiry, CSRF handling, liveness/readiness/authenticated diagnostics, and
   graceful shutdown of in-flight approval and signing leases.
+- Define hard size and cardinality limits for inbound requests before allocation
+  where possible.
 
 Exit criteria:
 - Oversized and slow requests are rejected.
@@ -398,6 +414,9 @@ Goal:
   algorithm confusion, and key/signature mismatches.
 - Reject trailing or multiple PEM/DER objects and duplicate `extensionRequest`
   attributes.
+- Enforce hard limits for CSR bytes, subject attribute count, SAN count, SAN
+  combined length, extension count, nesting depth, and string lengths before
+  allocation where possible.
 
 Exit criteria:
 - Malformed, oversized, ambiguous, and duplicate CSR fields are rejected.
@@ -466,6 +485,19 @@ Goal:
   checkpoints, provider grants, and future protocol objects.
 - The broker resolves raw provider mappings only after verifying the approved
   provider-mapping digest.
+- Define format-evolution rules for manifests, receipts, grants, checkpoints,
+  drift snapshots, and ceremony packages: unknown critical fields are rejected,
+  unknown non-critical fields are accepted only where explicitly permitted, older
+  verifiers never reinterpret newer schemas, canonicalization-version fallback is
+  forbidden, minimum and maximum schema versions are explicit, downgrade behavior
+  is defined, and signatures declare whether they cover raw canonical bytes or a
+  prehashed representation.
+- Check in byte-exact golden vectors for operation manifests, approval receipts,
+  provider grants, audit checkpoints, offline ceremony packages, and drift
+  snapshots.
+- Define hard size and cardinality limits for manifests, quorum receipt count,
+  guardian-set size, provider mapping references, artifact references, and
+  approval-policy fields.
 
 Exit criteria:
 - The same fully specified manifest field set has exactly one canonical byte
@@ -474,6 +506,9 @@ Exit criteria:
   remain cryptographically distinct.
 - Manifest digest appears in WebAuthn challenges, quorum approvals, provider
   calls, audit events, and output records.
+- Golden vectors include canonical input fields, expected encoded bytes, digest,
+  signature input, expected verification result, mutated negative cases,
+  unknown-version cases, and unknown-critical-field cases.
 
 ### v0.23.0: Trusted Transaction Display
 
@@ -490,6 +525,7 @@ Goal:
 - Distinguish logical issuer names from issuer fingerprints and omit raw
   provider mounts, paths, roles, tokens, or internal mappings from client
   receipts.
+- Define display receipt size limits and golden vectors.
 
 Exit criteria:
 - Highest-security profiles require independent client or workstation display.
@@ -497,6 +533,8 @@ Exit criteria:
 - UI truncation is prohibited for SANs, issuer fingerprints, custody tier,
   exceptions, and TTL.
 - A short authentication string is supplementary and never sufficient by itself.
+- Display receipt verification fails on unknown critical fields, unsupported
+  schema versions, trust-key substitution, or canonicalization downgrade.
 
 ### v0.24.0: WebAuthn Step-Up And Replay Resistance
 
@@ -586,6 +624,8 @@ Exit criteria:
 - Independent audit verification does not require access to the primary
   database.
 - Reconciliation operations themselves require audit intent.
+- Audit event and checkpoint size limits are enforced before persistence, and
+  audit checkpoint golden vectors cover positive and mutated negative cases.
 
 ### v0.29.0: Backend mTLS Transport
 
@@ -612,12 +652,15 @@ Goal:
   manifest binding, single-use handle, operation state, and caller identity.
 - Attach manifest digest as safe metadata or header where the provider supports
   it without claiming cross-provider cryptographic token binding.
+- Define provider grant golden vectors and hard grant-size limits.
 
 Exit criteria:
 - Broker grants cannot be reused for a different operation.
 - Underlying provider tokens are never exposed to web, CLI, parser, or public API
   callers.
 - Broker logs are redacted and independently auditable.
+- Provider grant verification rejects unknown critical fields, unsupported
+  schema versions, and canonicalization-version downgrade.
 
 ### v0.31.0: First Provider Bootstrap
 
@@ -668,6 +711,8 @@ Goal:
   no revocation authority, no policy mutation, and no auto-repair permission.
 - Authenticate drift snapshots, bind them to the approved provider-state digest,
   and enforce an explicit maximum evidence freshness.
+- Define drift snapshot golden vectors, size limits, schema-version bounds, and
+  unknown-critical-field rejection.
 
 Exit criteria:
 - Drift events are audited.
@@ -707,12 +752,16 @@ Goal:
   policies/validity/critical extensions match, returned serial is valid and
   unique, returned chain contains no unexpected certificates, and the leaf does
   not outlive the issuer.
+- Define hard limits for certificate chain length, total chain bytes, single
+  certificate size, extension count, and provider response size.
 
 Exit criteria:
 - Provider output that violates the authorized manifest or semantic lint rules is
   rejected.
 - Interop vectors cover OpenSSL, rustls, webpki, Java, and Go where practical.
 - Provider-supplied private-key fields are never accepted or deserialized.
+- Certificate and provider-response limit tests reject oversized or excessive
+  structures before expensive validation where possible.
 
 ### v0.36.0: Fuzzed CSR, Name, Policy, And Manifest Parsers
 
@@ -816,6 +865,8 @@ Goal:
   partitioned or delta CRL reconciliation where supported.
 - Verify delegated OCSP responder certificate, EKU, issuer, lifetime, response
   signature, and good/revoked/unknown/stale/malformed response handling.
+- Define CRL size limits, revoked-entry count limits, OCSP response size limits,
+  and pre-allocation rejection behavior.
 
 Exit criteria:
 - Freshness failures are visible and policy-bound.

@@ -40,14 +40,18 @@ fi
 
 echo "checks: version ladder"
 grep -q "offline ceremony-package format" docs/versioning-plan.md
+grep -q "Ceremony package golden vectors" docs/versioning-plan.md
 grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md
 grep -q "Immediate physical erasure may not be" docs/versioning-plan.md
 grep -q "non-cloneable redacted secret wrappers" docs/versioning-plan.md
+grep -q "trust-anchor distribution" docs/versioning-plan.md
 grep -q "v0.19.0: Strict PKCS#10 CSR Parser" docs/versioning-plan.md
 grep -q "Verify PKCS#10 proof of possession" docs/versioning-plan.md
 grep -q "v0.21.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
 grep -q "trustheim/manifest/v1" docs/versioning-plan.md
+grep -q "format-evolution rules" docs/versioning-plan.md
 grep -q "trustheim/display-receipt/v1" docs/versioning-plan.md
+grep -q "hard size and cardinality limits" docs/versioning-plan.md
 grep -q "v0.33.0: Provider Policy Drift Detection" docs/versioning-plan.md
 grep -q "dedicated read-only evidence/drift identity" docs/versioning-plan.md
 grep -q "v0.37.0: Transactional Reconciliation Before Provider Effects" docs/versioning-plan.md
