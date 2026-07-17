@@ -492,6 +492,20 @@ Goal:
   forbidden, minimum and maximum schema versions are explicit, downgrade behavior
   is defined, and signatures declare whether they cover raw canonical bytes or a
   prehashed representation.
+- Each signed-object schema version defines exactly one signature construction
+  through its approved signature suite. The exact prehash algorithm, domain
+  separation before hashing, signature encoding, key type and algorithm
+  compatibility, and protected algorithm parameters are fixed by the schema and
+  covered by the signature. Unprotected or attacker-selected changes between
+  raw-message and prehashed signing are rejected, as are duplicate or conflicting
+  algorithm identifiers.
+- All fields, including permitted unknown non-critical fields, are included in
+  canonical serialization and signature verification. Verifiers may ignore their
+  semantics only after authenticating them, and unknown fields are never stripped
+  before digest or signature calculation. For v1 authorization-bearing objects
+  such as manifests, approvals, provider grants, and ceremony packages, the
+  initial policy is to reject all unknown fields unless a later schema version
+  explicitly introduces authenticated extension handling.
 - Check in byte-exact golden vectors for operation manifests, approval receipts,
   provider grants, audit checkpoints, offline ceremony packages, and drift
   snapshots.
