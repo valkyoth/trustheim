@@ -39,10 +39,11 @@ if rg -n "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" c
 fi
 
 echo "checks: version ladder"
-grep -q "v0.8.0: Public API/Domain/Backend Dependency Inversion" docs/versioning-plan.md
-grep -q "v0.29.0: End-To-End CSR Signing MVP" docs/versioning-plan.md
-grep -q "v0.38.0: Second Provider Proof" docs/versioning-plan.md
-grep -q "v0.52.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
+grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md
+grep -q "v0.19.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
+grep -q "v0.31.0: Provider Policy Drift Detection" docs/versioning-plan.md
+grep -q "v0.45.0: Second Provider Proof" docs/versioning-plan.md
+grep -q "v0.59.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
 grep -q "v1.0.0: Stable Custody-Free CA Coordinator" docs/versioning-plan.md
 
 echo "checks: source list"
