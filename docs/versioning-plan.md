@@ -11,7 +11,8 @@ custody, audit, identity, storage, and recovery properties are proven.
 
 These versions were re-checked on 2026-07-17 before updating this plan:
 
-- Rust stable is 1.97.0, released on 2026-07-09.
+- Rust stable is 1.97.1, released on 2026-07-16 as a patch release after
+  1.97.0.
 - OpenBao latest release is v2.5.4, released on 2026-05-20.
 - HashiCorp Vault latest observed release line is 1.21.x.
 
@@ -490,8 +491,8 @@ Goal:
   unknown non-critical fields are accepted only where explicitly permitted, older
   verifiers never reinterpret newer schemas, canonicalization-version fallback is
   forbidden, minimum and maximum schema versions are explicit, downgrade behavior
-  is defined, and signatures declare whether they cover raw canonical bytes or a
-  prehashed representation.
+  is defined, and each schema version defines whether signatures cover raw
+  canonical bytes or a fixed prehashed representation.
 - Each signed-object schema version defines exactly one signature construction
   through its approved signature suite. The exact prehash algorithm, domain
   separation before hashing, signature encoding, key type and algorithm

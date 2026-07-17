@@ -50,6 +50,7 @@ grep -q "Verify PKCS#10 proof of possession" docs/versioning-plan.md
 grep -q "v0.21.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
 grep -q "trustheim/manifest/v1" docs/versioning-plan.md
 grep -q "format-evolution rules" docs/versioning-plan.md
+grep -q "each schema version defines whether signatures cover raw" docs/versioning-plan.md
 grep -q "Each signed-object schema version defines exactly one signature construction" docs/versioning-plan.md
 grep -q "unknown fields are never stripped" docs/versioning-plan.md
 grep -q "trustheim/display-receipt/v1" docs/versioning-plan.md
