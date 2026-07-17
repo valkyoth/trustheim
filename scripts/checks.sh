@@ -33,18 +33,22 @@ grep -q "trustheim-web" docs/app-boundaries.md
 grep -q "trustheim-cli" docs/app-boundaries.md
 
 echo "checks: app dependency boundaries"
-if rg -n "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" crates/trustheim-web crates/trustheim-cli; then
+if grep -R -n -E "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" crates/trustheim-web crates/trustheim-cli; then
     echo "web and CLI crates must not depend on backend provider crates" >&2
     exit 1
 fi
 
 echo "checks: version ladder"
-milestone_count="$(rg --count "^### v" docs/versioning-plan.md)"
-test "$(rg --count "^Goal:" docs/versioning-plan.md)" = "${milestone_count}"
-test "$(rg --count "^Deliverables:" docs/versioning-plan.md)" = "${milestone_count}"
-test "$(rg --count "^Verification:" docs/versioning-plan.md)" = "${milestone_count}"
-test "$(rg --count "^Exit criteria:" docs/versioning-plan.md)" = "${milestone_count}"
-test "$(rg --count "Milestone-scoped pentest" docs/versioning-plan.md)" = "${milestone_count}"
+count_matches() {
+    grep -c -E "$1" "$2" || true
+}
+
+milestone_count="$(count_matches "^### v" docs/versioning-plan.md)"
+test "$(count_matches "^Goal:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(count_matches "^Deliverables:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(count_matches "^Verification:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(count_matches "^Exit criteria:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(count_matches "Milestone-scoped pentest" docs/versioning-plan.md)" = "${milestone_count}"
 grep -q "offline ceremony-package format" docs/versioning-plan.md
 grep -q "Ceremony package golden vectors" docs/versioning-plan.md
 grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md
