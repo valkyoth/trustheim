@@ -39,10 +39,11 @@ if rg -n "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" c
 fi
 
 echo "checks: version ladder"
-grep -q "v1.0: Stable Private CA Core" docs/versioning-plan.md
-grep -q "v1.1: ACME And Renewal Automation" docs/versioning-plan.md
-grep -q "v1.2: HA, DR, And Operations Evidence" docs/versioning-plan.md
-grep -q "v1.4: Additional Backend Provider" docs/versioning-plan.md
+grep -q "v0.8.0: Public API/Domain/Backend Dependency Inversion" docs/versioning-plan.md
+grep -q "v0.29.0: End-To-End CSR Signing MVP" docs/versioning-plan.md
+grep -q "v0.38.0: Second Provider Proof" docs/versioning-plan.md
+grep -q "v0.52.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
+grep -q "v1.0.0: Stable Custody-Free CA Coordinator" docs/versioning-plan.md
 
 echo "checks: source list"
 grep -q "https://openbao.org/api-docs/secret/pki/" docs/research-sources.md
