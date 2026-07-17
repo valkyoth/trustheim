@@ -39,15 +39,20 @@ if rg -n "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" c
 fi
 
 echo "checks: version ladder"
+grep -q "offline ceremony-package format" docs/versioning-plan.md
 grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md
+grep -q "Immediate physical erasure may not be" docs/versioning-plan.md
 grep -q "non-cloneable redacted secret wrappers" docs/versioning-plan.md
 grep -q "v0.19.0: Strict PKCS#10 CSR Parser" docs/versioning-plan.md
 grep -q "Verify PKCS#10 proof of possession" docs/versioning-plan.md
 grep -q "v0.21.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
 grep -q "trustheim/manifest/v1" docs/versioning-plan.md
+grep -q "trustheim/display-receipt/v1" docs/versioning-plan.md
 grep -q "v0.33.0: Provider Policy Drift Detection" docs/versioning-plan.md
+grep -q "dedicated read-only evidence/drift identity" docs/versioning-plan.md
 grep -q "v0.37.0: Transactional Reconciliation Before Provider Effects" docs/versioning-plan.md
 grep -q "Authorization intent is durably recorded before provider credential" docs/versioning-plan.md
+grep -q "CRL and OCSP signing keys in the provider, HSM" docs/versioning-plan.md
 grep -q "v0.47.0: Second Provider Proof" docs/versioning-plan.md
 grep -q "v0.61.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
 grep -q "v1.0.0: Stable Custody-Free CA Coordinator" docs/versioning-plan.md

@@ -105,11 +105,28 @@ Goal:
 - Define root creation, intermediate issuance, issuer activation, rollover,
   revocation, decommissioning, and disaster-recovery ceremonies.
 - Keep root operations outside normal runtime issuance paths.
+- Implement a versioned, domain-separated offline ceremony-package format with a
+  fresh ceremony ID, anti-replay nonce, ceremony manifest digest, issuer
+  fingerprint, policy digest, quorum receipts, expiry, and public CSR/certificate
+  material only.
+- Support package signing and optional encryption for removable-media transfer,
+  deterministic ceremony transcripts, audit import, and malware-scanning/media
+  handling procedures.
+- Provide an offline verification CLI with no provider or runtime credentials.
 
 Exit criteria:
 - Runtime orchestrator credentials cannot reach root CA paths.
 - Ceremony steps are documented with required quorum, evidence, and audit
   artifacts.
+- Ceremony packages never contain private keys, root tokens, HSM PINs, unseal
+  material, or provider runtime credentials.
+- Imported ceremony results are verified against the original ceremony manifest
+  and rejected when stale, duplicated, modified, expired, or for the wrong
+  trust-domain/environment.
+- Returned root or intermediate certificates must match the requested public key
+  and authorized constraints.
+- Trustheim coordinates and verifies offline ceremonies without running the
+  offline root signer itself.
 
 ### v0.5.0: Secret, Log, Crash, And Temporary-Data Hygiene
 
@@ -169,11 +186,19 @@ Goal:
   terminal state, requester resubmission by digest, or an encrypted
   pending-artifact store.
 - Define retention and secure deletion behavior for pending and terminal data.
+- Define realistic deletion semantics that account for WALs, replicas, snapshots,
+  backups, legal hold, and tombstones. Immediate physical erasure may not be
+  claimed unless a selected storage implementation proves it.
 
 Exit criteria:
 - Storage trait documents required consistency and failure semantics.
 - Parser worker has no database credentials.
 - Coordinator persists parser results and pending artifact references.
+- Pending artifacts support logical deletion, access revocation, and
+  crypto-shredding by encryption-key destruction where that storage strategy is
+  selected.
+- WAL, replica, and backup retention limits are documented for each supported
+  production store.
 - A production storage adapter selected by ADR passes migrations from every
   supported schema version, concurrency tests, crash/restart tests, durable
   fencing tests, and backup-consistency tests.
@@ -366,6 +391,8 @@ Goal:
 - Normalize names and SANs before policy evaluation.
 - Define `ValidatedCsr` and parser-result vectors before policy code depends on
   them.
+- Include CSR parser version, name-normalization version, IDNA profile/version,
+  and URI-normalization rules in parser output and downstream digests.
 - Verify PKCS#10 proof of possession by checking the CSR signature with the CSR
   public key, rejecting unsupported signature algorithms, malformed parameters,
   algorithm confusion, and key/signature mismatches.
@@ -384,6 +411,8 @@ Goal:
 - Validate CSR semantics before profile policy: requested subject, CN behavior,
   DNS/IP/URI/email SAN normalization, IDNA handling, SPIFFE URI rules where
   enabled, requested extensions, public-key algorithm, and key-usage intent.
+- Preserve normalization version facts so pending approvals cannot survive a
+  software upgrade that would interpret the same CSR differently.
 
 Exit criteria:
 - Policy receives only normalized, validated CSR facts.
@@ -399,6 +428,9 @@ Goal:
   KU/EKU, key type, algorithm, custody tier, quorum, authenticator assurance,
   overlays, and decision facts.
 - Produce an immutable policy decision with profile versions and digests.
+- Include CSR parser, name-normalization, IDNA, URI-normalization, X.509
+  lint-policy, and canonical manifest encoder versions in policy facts and
+  policy/configuration digests.
 
 Exit criteria:
 - Mutable facts are rechecked immediately before signing.
@@ -422,14 +454,18 @@ Goal:
   request digest, normalized subject/SAN facts, issuer fingerprint, policy
   decision digest, cryptographic-policy digest, approved configuration digest,
   approved provider-state digest, guardian approval-policy digest, hash/signature
-  algorithm identifiers, canonical encoding identifier, custody tier, requester
-  identity, eligible guardian-set digest and epoch, quorum threshold, required
-  roles, separation-of-duty constraints, approval-window ID and expiry, time
-  bounds, provider mapping, artifact references, and expected output constraints.
+  algorithm identifiers, canonical encoding identifier, canonical manifest
+  encoder version, parser/normalization/lint-policy versions, logical
+  provider-neutral issuer, approved provider-mapping digest, custody tier,
+  requester identity, eligible guardian-set digest and epoch, quorum threshold,
+  required roles, separation-of-duty constraints, approval-window ID and expiry,
+  time bounds, artifact references, and expected output constraints.
 - Store actual approvers in separate approval records that reference the
   immutable manifest digest.
 - Use separate signed-object domains for manifests, approval receipts, audit
   checkpoints, provider grants, and future protocol objects.
+- The broker resolves raw provider mappings only after verifying the approved
+  provider-mapping digest.
 
 Exit criteria:
 - The same fully specified manifest field set has exactly one canonical byte
@@ -443,13 +479,24 @@ Exit criteria:
 
 Goal:
 - Prevent a compromised web UI from silently changing high-value operations.
-- Return a signed human-readable receipt derived from the canonical manifest
-  bytes for web, CLI, and future dedicated clients to verify.
+- Return a signed structured display receipt using domain
+  `trustheim/display-receipt/v1`, containing the manifest digest and a versioned
+  display projection derived from the canonical manifest bytes for web, CLI, and
+  future dedicated clients to verify.
 - Define short authentication strings or digest displays for independent review.
+- Use deterministic field ordering, explicit omission rules, client-side
+  signature verification against pinned or managed receipt trust keys, and no
+  hidden security-relevant fields.
+- Distinguish logical issuer names from issuer fingerprints and omit raw
+  provider mounts, paths, roles, tokens, or internal mappings from client
+  receipts.
 
 Exit criteria:
 - Highest-security profiles require independent client or workstation display.
 - Tests prove display receipts fail if manifest bytes are changed.
+- UI truncation is prohibited for SANs, issuer fingerprints, custody tier,
+  exceptions, and TTL.
+- A short authentication string is supplementary and never sufficient by itself.
 
 ### v0.24.0: WebAuthn Step-Up And Replay Resistance
 
@@ -617,6 +664,10 @@ Goal:
 - Check drift at startup, periodically, and before signing.
 - Disable signing on unapproved drift and require an explicit reconciliation
   ceremony. Runtime credentials must not auto-repair provider policy.
+- Use a dedicated read-only evidence/drift identity with no signing authority,
+  no revocation authority, no policy mutation, and no auto-repair permission.
+- Authenticate drift snapshots, bind them to the approved provider-state digest,
+  and enforce an explicit maximum evidence freshness.
 
 Exit criteria:
 - Drift events are audited.
@@ -624,6 +675,9 @@ Exit criteria:
 - Signing is denied when provider state differs from the approved model.
 - Detailed provider readiness and capability information is authenticated-only;
   public health endpoints expose only coarse profile availability.
+- Runtime signing is denied when the drift snapshot is stale or internally
+  inconsistent.
+- Compromise of the drift reader cannot issue or revoke certificates.
 
 ### v0.34.0: First Provider Runtime Adapter
 
@@ -753,6 +807,10 @@ Goal:
 - Implement mandatory CRL/OCSP freshness monitoring, publication behavior,
   delegated responder or CRL-signing key custody, rotation, outage policy, and
   audit records.
+- Keep CRL and OCSP signing keys in the provider, HSM, or separately isolated
+  responder. Trustheim stores only public certificates, key references,
+  fingerprints, rotation state, and custody evidence; these keys never enter
+  Trustheim's service-key storage.
 - Cryptographically verify CRL signatures, CRL issuer, CRL number, validity,
   `thisUpdate`, `nextUpdate`, locally known revoked serial inclusion, and
   partitioned or delta CRL reconciliation where supported.
@@ -761,7 +819,8 @@ Goal:
 
 Exit criteria:
 - Freshness failures are visible and policy-bound.
-- Responder and CRL-signing keys follow the custody and service-key lifecycle.
+- Responder and CRL-signing key references follow custody and rotation lifecycle
+  requirements without storing private-key material in Trustheim.
 - Retired issuers continue publishing status until all relevant certificates
   expire.
 - Monitoring failure is loud and policy-bound without necessarily taking down
@@ -784,11 +843,15 @@ Exit criteria:
 Goal:
 - Implement controlled issuer rollover and decommissioning for runtime-managed
   intermediates while keeping root ceremonies separate.
+- Use the offline ceremony-package protocol for root and intermediate exchanges
+  whenever an air-gapped or offline signer participates.
 
 Exit criteria:
 - Leaf certificates cannot outlive allowed issuer windows.
 - Production rollover requires the applicable hardware-evidence profile.
 - Rollover emits signed manifests and audit records.
+- Imported rollover artifacts are verified against the original ceremony package
+  and operation manifest before activation.
 
 ### v0.45.0: Privacy-Preserving Telemetry
 
