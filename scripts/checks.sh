@@ -39,6 +39,12 @@ if rg -n "trustheim-backend|trustheim-backend-openbao|trustheim-backend-vault" c
 fi
 
 echo "checks: version ladder"
+milestone_count="$(rg --count "^### v" docs/versioning-plan.md)"
+test "$(rg --count "^Goal:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(rg --count "^Deliverables:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(rg --count "^Verification:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(rg --count "^Exit criteria:" docs/versioning-plan.md)" = "${milestone_count}"
+test "$(rg --count "Milestone-scoped pentest" docs/versioning-plan.md)" = "${milestone_count}"
 grep -q "offline ceremony-package format" docs/versioning-plan.md
 grep -q "Ceremony package golden vectors" docs/versioning-plan.md
 grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md

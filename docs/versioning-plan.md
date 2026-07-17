@@ -63,10 +63,20 @@ Goal:
 - Preserve EUPL-1.2 licensing and project boundary documents.
 - Keep OpenAPI generation, smoke tests, and the generic provider trait visible.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - `scripts/checks.sh` passes.
 - API, web, and CLI crates compile as separate binaries.
 - Web and CLI crates have no provider crate dependency.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.2.0: Formal Threat And Privacy Model
 
@@ -76,10 +86,20 @@ Goal:
   network, and host compromise.
 - Classify request, CSR, certificate, audit, identity, and provider metadata.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Threat model contains STRIDE-style abuse cases and mitigations.
 - Privacy model defines retention and redaction defaults.
 - Release gate fails when threat model sections are missing.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.3.0: Key Custody, HSM Boundary, And Cryptographic Policy
 
@@ -94,11 +114,21 @@ Goal:
   and production claims for post-quantum or hybrid algorithms until promoted by a
   dedicated advanced-profile gate.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Custody tier and cryptographic-policy digest appear in policy decisions,
   manifests, audit events, and provider capability records.
 - Hardware-required profiles fail closed without acceptable evidence.
 - Profiles reference a versioned cryptographic policy.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.4.0: CA Lifecycle And Ceremony Model
 
@@ -120,6 +150,15 @@ Goal:
   environment.
 - Provide an offline verification CLI with no provider or runtime credentials.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Runtime orchestrator credentials cannot reach root CA paths.
 - Ceremony steps are documented with required quorum, evidence, and audit
@@ -136,6 +175,7 @@ Exit criteria:
 - Ceremony package golden vectors include canonical input fields, expected bytes,
   digest, signature input, expected verification result, mutated negative cases,
   unknown-version cases, and unknown-critical-field cases.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.5.0: Secret, Log, Crash, And Temporary-Data Hygiene
 
@@ -150,6 +190,15 @@ Goal:
 - Remove predictable `/tmp/trustheim-*` behavior; use `umask 077`, exclusive
   temporary creation, private temporary directories, and cleanup traps.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Logs and errors are redacted by default.
 - CSR and provider responses have retention classes.
@@ -161,6 +210,7 @@ Exit criteria:
   provider response bodies do not appear in logs or client errors.
 - Provider credentials, HSM PINs, and authority-bearing secrets cannot be passed
   through CLI arguments or environment variables.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.6.0: Runtime Process And Sandbox Boundaries
 
@@ -174,6 +224,15 @@ Goal:
   different runtime identities; parser has no DB, provider, or signing authority;
   broker has no session, WebAuthn, or general database credentials.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Deployment docs cover native binaries and rootless Podman.
 - Web and CLI cannot reach parser or broker directly.
@@ -182,6 +241,7 @@ Exit criteria:
   profile.
 - A compromise simulation proves the parser cannot invoke signing.
 - Single-process mode is explicitly development-only.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.7.0: Storage Architecture And Pending Artifacts
 
@@ -199,6 +259,15 @@ Goal:
   backups, legal hold, and tombstones. Immediate physical erasure may not be
   claimed unless a selected storage implementation proves it.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Storage trait documents required consistency and failure semantics.
 - Parser worker has no database credentials.
@@ -213,6 +282,7 @@ Exit criteria:
   fencing tests, and backup-consistency tests.
 - The exact isolation level and lock/lease assumptions for each supported store
   are documented.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.8.0: Inter-Process Protocol Contract
 
@@ -223,11 +293,21 @@ Goal:
 - Bind parser results to the submitted CSR digest so they cannot be substituted.
 - Make broker authorization capability-bearing and operation-scoped.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Schemas reject oversize, deeply nested, stale, replayed, or downgraded
   messages.
 - RPC errors are redacted but traceable through correlation IDs.
 - Broker refuses arbitrary sign-bytes requests.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.9.0: Strict Configuration And Secret Injection
 
@@ -243,6 +323,15 @@ Goal:
   approved provider-state digest, and atomic reload or explicit restart-only
   behavior.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Invalid or unknown configuration fails closed.
 - Secret values are never printed through debug output.
@@ -251,6 +340,7 @@ Exit criteria:
   preserving old approvals.
 - Configuration digest and approved provider-state digest are included in the
   operation manifest.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.10.0: Service-Key Lifecycle
 
@@ -265,12 +355,22 @@ Goal:
   historical receipt verification, offline verifier updates, and prevention of
   server-supplied trust-key substitution.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Signed records include key IDs.
 - Rotation tests verify old audit checkpoints and reject expired signing keys.
 - Missing or expired keys fail closed with redacted errors.
 - Client and offline-verifier receipt trust anchors can be rotated without
   breaking historical verification.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.11.0: Public API/Domain/Backend Dependency Inversion
 
@@ -280,10 +380,20 @@ Goal:
 - Keep backend path, mount, role, token, and issuer details out of public API
   authorization models.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Web and CLI compile without provider crates.
 - Public API tests pass against a fake provider.
 - Provider concepts appear only in provider crates and internal mapping tables.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.12.0: Provider-Neutral Backend Trait v2
 
@@ -298,12 +408,22 @@ Goal:
 - Keep internal backend errors non-serializable; public errors use fixed safe
   messages and opaque correlation IDs.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Unsupported capabilities downgrade policy claims or fail closed.
 - Conformance tests cover at least the fake provider.
 - Provider adapters cannot sign using only a public request DTO.
 - Provider response bodies are bounded and never directly forwarded to clients or
   logs.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.13.0: Provider Conformance Harness
 
@@ -312,10 +432,20 @@ Goal:
 - Include success, denial, timeout, malformed output, ambiguous completion, and
   reconciliation cases.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Harness can run without a real provider.
 - Harness proves providers cannot bypass local policy, manifest, audit, quorum,
   drift detection, reconciliation, or output verification requirements.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.14.0: Public API Resource Lifecycle And OpenAPI Validation
 
@@ -328,11 +458,21 @@ Goal:
   enumeration-resistant public identifiers, retention and tombstone semantics,
   and requester visibility into guardian identities.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - OpenAPI diff is reviewed intentionally.
 - CLI smoke tests use the published API shape.
 - Negative contract tests cover request sizes, malformed JSON, denied fields,
   content types, idempotency, conditional updates, and redacted errors.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.15.0: Inbound HTTP/TLS Transport And Request Hardening
 
@@ -347,10 +487,20 @@ Goal:
 - Define hard size and cardinality limits for inbound requests before allocation
   where possible.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Oversized and slow requests are rejected.
 - Errors remain provider-neutral and redact sensitive input.
 - DAST smoke tests cover malformed HTTP and proxy-header cases.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.16.0: Identity, Sessions, Recovery, And Route Authorization
 
@@ -361,6 +511,15 @@ Goal:
 - Separate requester, approver, security admin, provider admin, auditor, and
   break-glass roles.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Route tests cover every privileged endpoint.
 - Suspended or deprovisioned guardians cannot approve.
@@ -368,6 +527,7 @@ Exit criteria:
 - Distinct approvers mean distinct active guardian identities established through
   the documented identity-proofing procedure, not a cryptographic claim about
   distinct humans.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.17.0: WebAuthn Enrollment And Credential Lifecycle
 
@@ -376,11 +536,21 @@ Goal:
 - Bind credentials to identity records, authenticator metadata, backup state,
   guardian-set epoch, credential epoch, and revocation state.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Enrollment requires an authorized ceremony.
 - Credential ID and public-key uniqueness are enforced across identities.
 - Credential revocation takes effect before new approvals.
 - Tests cover replayed and cross-user assertions.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.18.0: WebAuthn Verification, Attestation, And Assurance Tiers
 
@@ -392,6 +562,15 @@ Goal:
   metadata freshness, status, revocation, and outage behavior.
 - Express policy in assurance tiers, not vendor names.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Missing, stale, revoked, or unverifiable attestation denies a
   hardware-required profile.
@@ -399,6 +578,7 @@ Exit criteria:
   manifest creation; it is never an authentication-time fallback.
 - Metadata-service outage behavior is explicit per profile: fail closed for
   hardware-required profiles unless a documented bounded cache remains valid.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.19.0: Strict PKCS#10 CSR Parser
 
@@ -419,11 +599,21 @@ Goal:
   combined length, extension count, nesting depth, and string lengths before
   allocation where possible.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Malformed, oversized, ambiguous, and duplicate CSR fields are rejected.
 - Parser result is authenticated, bound to the CSR digest, and returned to the
   coordinator.
 - The parsed SPKI is proven to be exactly the key covered by the CSR signature.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.20.0: CSR Request Semantic Validation
 
@@ -434,10 +624,20 @@ Goal:
 - Preserve normalization version facts so pending approvals cannot survive a
   software upgrade that would interpret the same CSR differently.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Policy receives only normalized, validated CSR facts.
 - Tests cover forbidden CA requests, duplicate names, unknown critical CSR
   extensions, unsupported algorithms, and ambiguous encodings.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.21.0: Certificate Profile And Local Policy Engine
 
@@ -452,6 +652,15 @@ Goal:
   lint-policy, and canonical manifest encoder versions in policy facts and
   policy/configuration digests.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Mutable facts are rechecked immediately before signing.
 - Policy result is included in the canonical operation manifest.
@@ -464,6 +673,7 @@ Exit criteria:
   changes.
 - Changed mutable facts are never silently re-evaluated while preserving
   approvals created under the old facts.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.22.0: Canonical Operation Manifest
 
@@ -514,6 +724,15 @@ Goal:
   guardian-set size, provider mapping references, artifact references, and
   approval-policy fields.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - The same fully specified manifest field set has exactly one canonical byte
   encoding.
@@ -524,6 +743,7 @@ Exit criteria:
 - Golden vectors include canonical input fields, expected encoded bytes, digest,
   signature input, expected verification result, mutated negative cases,
   unknown-version cases, and unknown-critical-field cases.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.23.0: Trusted Transaction Display
 
@@ -542,6 +762,15 @@ Goal:
   receipts.
 - Define display receipt size limits and golden vectors.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Highest-security profiles require independent client or workstation display.
 - Tests prove display receipts fail if manifest bytes are changed.
@@ -550,6 +779,7 @@ Exit criteria:
 - A short authentication string is supplementary and never sufficient by itself.
 - Display receipt verification fails on unknown critical fields, unsupported
   schema versions, trust-key substitution, or canonicalization downgrade.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.24.0: WebAuthn Step-Up And Replay Resistance
 
@@ -562,6 +792,15 @@ Goal:
   restart/HA safety, and prefer a keyed digest over storing raw challenges as
   authority-bearing database values.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Captured assertions cannot be replayed across routes or manifests.
 - Expired challenges fail closed.
@@ -570,6 +809,7 @@ Exit criteria:
 - Challenge state is invalidated on manifest, policy, credential, guardian-set,
   or session changes.
 - Parallel replay tests prove double consumption fails.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.25.0: Multi-Party Quorum State Machine
 
@@ -580,10 +820,20 @@ Goal:
 - Retain approval-record transcript fields needed for later independent review
   without unnecessarily retaining raw sensitive WebAuthn data.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Quorum approvals are bound to the same canonical manifest bytes.
 - The requester cannot satisfy approver requirements when policy forbids it.
 - Guardian unavailability and minimum guardian count are modeled explicitly.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.26.0: Quorum Substitution, Concurrency, And Recovery
 
@@ -591,9 +841,19 @@ Goal:
 - Handle concurrent approvals, duplicate submissions, guardian replacement,
   suspension, expiration, stale manifests, and recovery ceremonies.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - State-generation tests prevent lost approvals and double completion.
 - Recovery requires a documented ceremony and audit event.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.27.0: Secure Time Semantics
 
@@ -602,11 +862,21 @@ Goal:
   lease fencing independent of wall clock, canonical UTC encoding, provider time
   comparison, database time comparison, and behavior on time jumps.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Signing fails closed when time trust is lost.
 - Certificate `notBefore` backdating, expiry, and provider clock drift are
   bounded by policy.
 - Tests simulate clock rollback, jump forward, and provider/database skew.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.28.0: Tamper-Evident Audit Ledger And Independent Anchoring
 
@@ -625,6 +895,15 @@ Goal:
   completion or whether a durable local outbox plus independently replicated
   checkpoint is sufficient for each profile.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Tampering with an audit record is detected.
 - Database rollback alone cannot hide or rewrite issuance history.
@@ -641,6 +920,7 @@ Exit criteria:
 - Reconciliation operations themselves require audit intent.
 - Audit event and checkpoint size limits are enforced before persistence, and
   audit checkpoint golden vectors cover positive and mutated negative cases.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.29.0: Backend mTLS Transport
 
@@ -652,11 +932,21 @@ Goal:
   denial, no environment proxy discovery, timeouts, response-size limits,
   rotation overlap, and expiry handling.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Plain HTTP provider connections are impossible outside explicit dev mode.
 - Host root-store fallback is impossible unless explicitly configured for a lower
   assurance profile.
 - Provider identity mismatch fails closed.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.30.0: Provider Credential Broker And Lifecycle
 
@@ -669,6 +959,15 @@ Goal:
   it without claiming cross-provider cryptographic token binding.
 - Define provider grant golden vectors and hard grant-size limits.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Broker grants cannot be reused for a different operation.
 - Underlying provider tokens are never exposed to web, CLI, parser, or public API
@@ -676,6 +975,7 @@ Exit criteria:
 - Broker logs are redacted and independently auditable.
 - Provider grant verification rejects unknown critical fields, unsupported
   schema versions, and canonicalization-version downgrade.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.31.0: First Provider Bootstrap
 
@@ -689,6 +989,15 @@ Goal:
   ceremony, supports plan/dry-run and idempotent apply, and creates or verifies
   mounts, roles, issuer mappings, auth methods, and runtime policies.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Dev bootstrap may create local disposable audit sinks.
 - Production audit sinks are provisioned declaratively or out of band.
@@ -701,6 +1010,7 @@ Exit criteria:
 - Bootstrap produces a configuration/evidence digest consumed by drift detection,
   revokes or removes bootstrap credentials afterward, and refuses to operate with
   runtime credentials.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.32.0: First Provider ACL And Declarative Audit Policy
 
@@ -709,9 +1019,19 @@ Goal:
 - Ensure runtime credentials cannot reach root, broad admin, raw key export, or
   unrelated secret paths.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Tests prove denied provider paths remain denied.
 - Provider audit settings are verified at startup.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.33.0: Provider Policy Drift Detection
 
@@ -729,6 +1049,15 @@ Goal:
 - Define drift snapshot golden vectors, size limits, schema-version bounds, and
   unknown-critical-field rejection.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Drift events are audited.
 - Expected issuer public-key fingerprint is included in manifests.
@@ -738,6 +1067,7 @@ Exit criteria:
 - Runtime signing is denied when the drift snapshot is stale or internally
   inconsistent.
 - Compromise of the drift reader cannot issue or revoke certificates.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.34.0: First Provider Runtime Adapter
 
@@ -746,10 +1076,20 @@ Goal:
   extraction, revocation support, audit correlation, and reconciliation hooks for
   the first provider.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Adapter passes provider conformance tests.
 - Adapter cannot bypass local policy, manifest, quorum, audit, drift checks,
   reconciliation, or output verification.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.35.0: X.509 Semantic Linting
 
@@ -770,6 +1110,15 @@ Goal:
 - Define hard limits for certificate chain length, total chain bytes, single
   certificate size, extension count, and provider response size.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Provider output that violates the authorized manifest or semantic lint rules is
   rejected.
@@ -777,6 +1126,7 @@ Exit criteria:
 - Provider-supplied private-key fields are never accepted or deserialized.
 - Certificate and provider-response limit tests reject oversized or excessive
   structures before expensive validation where possible.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.36.0: Fuzzed CSR, Name, Policy, And Manifest Parsers
 
@@ -784,9 +1134,19 @@ Goal:
 - Fuzz CSR parsing, name normalization, IDNA, URI SAN, IP SAN, profile parsing,
   policy decisions, and manifest canonicalization.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Fuzz corpus is checked in with regression seeds.
 - Sanitizer or fuzz jobs are documented in the release gate.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.37.0: Transactional Reconciliation Before Provider Effects
 
@@ -803,11 +1163,21 @@ Goal:
 - Define graceful shutdown so a worker cannot abandon a provider call while
   immediately releasing its fencing lease.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Crash tests cover every transition around provider calls.
 - Ambiguous completions require reconciliation before retry.
 - v0.38 and later provider-effect milestones are lab-only unless this gate
   passes.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.38.0: Real HSM-Backed Signing Evidence
 
@@ -816,10 +1186,20 @@ Goal:
   highest custody profile before production intermediate creation, rollover, or
   externally supported issuance claims.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Hardware-required profiles fail without current evidence.
 - Evidence is bound to manifest, issuer, and provider output.
 - Earlier SoftHSM or provider-key paths remain lab or lower-tier profiles only.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.39.0: Dry-Run CSR Signing MVP
 
@@ -828,10 +1208,20 @@ Goal:
   step-up, quorum, audit intent, provider drift check, reconciliation, and
   provider signing in a dry-run or internal-only mode.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - No externally supported signing release is allowed at this milestone.
 - Dry-run proves the full authorization path without publishing a production
   signing claim.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.40.0: Certificate Output Verification And Inventory
 
@@ -843,12 +1233,22 @@ Goal:
 - Re-run the v0.35 cryptographic output checks on the exact certificate and
   chain returned by the provider before any client exposure.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - First externally usable signing endpoint is blocked until reconciliation,
   hardware-evidence requirements, and this gate pass.
 - Mismatched provider output is rejected and audited.
 - Any output mismatch quarantines the result and triggers reconciliation instead
   of retrying issuance blindly.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.41.0: Revocation Workflow
 
@@ -861,9 +1261,19 @@ Goal:
   authentication and immediate audit, stronger authorization for unrelated
   certificate revocation, and isolated CA/intermediate revocation ceremonies.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Revocation cannot bypass its configured authorization matrix.
 - Repeated revocation requests are idempotent or reconciled before retry.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.42.0: CRL And OCSP Publication
 
@@ -883,6 +1293,15 @@ Goal:
 - Define CRL size limits, revoked-entry count limits, OCSP response size limits,
   and pre-allocation rejection behavior.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Freshness failures are visible and policy-bound.
 - Responder and CRL-signing key references follow custody and rotation lifecycle
@@ -891,6 +1310,7 @@ Exit criteria:
   expire.
 - Monitoring failure is loud and policy-bound without necessarily taking down
   unrelated issuance unless the active profile requires it.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.43.0: Optional ACME Policy Gate
 
@@ -900,9 +1320,19 @@ Goal:
 - Keep direct provider ACME explicitly out of v1 unless Trustheim can prove it
   cannot bypass local policy, inventory, and audit.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - ACME remains disabled or experimental unless it passes the same policy,
   provider, audit, and inventory gates as other issuance paths.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.44.0: Root, Intermediate, Issuer Rotation, And Rollover
 
@@ -912,12 +1342,22 @@ Goal:
 - Use the offline ceremony-package protocol for root and intermediate exchanges
   whenever an air-gapped or offline signer participates.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Leaf certificates cannot outlive allowed issuer windows.
 - Production rollover requires the applicable hardware-evidence profile.
 - Rollover emits signed manifests and audit records.
 - Imported rollover artifacts are verified against the original ceremony package
   and operation manifest before activation.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.45.0: Privacy-Preserving Telemetry
 
@@ -925,9 +1365,19 @@ Goal:
 - Add metrics that expose operational health without leaking subject names, SANs,
   CSR data, serial inventory, provider tokens, or identity secrets.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Metrics are reviewed against the data classification table.
 - Sensitive labels are denied by tests.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.46.0: Explicit Lower-Tier Overlays And Break-Glass
 
@@ -940,12 +1390,22 @@ Goal:
   recording, manifest integrity, output verification, root/runtime credential
   separation, or public API/provider isolation.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Lower-tier overlays cannot be mistaken for the highest-security profile.
 - Break-glass leaves signed audit evidence and expires automatically.
 - Break-glass may alter quorum, availability, custody claims, or profile
   constraints only within explicitly permitted bounds; it is never "skip
   authorization and call provider."
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.47.0: Second Provider Proof
 
@@ -956,12 +1416,22 @@ Goal:
   independently specified adapter using meaningfully different credential, audit,
   issuer, and capability semantics.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Provider conformance harness passes for the required independent providers.
 - A fake provider remains useful for tests but is not accepted as the sole
   provider-neutrality proof.
 - Public API and storage schema do not gain provider-specific authorization
   concepts.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.48.0: Web Client
 
@@ -970,9 +1440,19 @@ Goal:
 - Include secure session handling, role-aware UI, manifest receipt display,
   approval workflows, revocation workflows, and audit views.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Web app has no provider credentials or provider crate dependencies.
 - High-value operations display signed manifest receipts.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.49.0: CLI Client
 
@@ -981,9 +1461,19 @@ Goal:
 - Support request creation, status checks, manifest verification, approvals,
   revocation, inventory queries, and audit export verification.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - CLI can operate without the web app.
 - CLI verifies signed receipts before approval commands.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.50.0: Rootless Podman Profiles
 
@@ -991,9 +1481,19 @@ Goal:
 - Provide rootless Podman deployment profiles for API, web, parser, broker,
   storage, provider integration, and support services.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Containers run without root privileges.
 - Provider network is isolated from web and CLI containers.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.51.0: Native Binary And systemd Hardening
 
@@ -1001,9 +1501,19 @@ Goal:
 - Provide native binary deployment with systemd units, sandboxing, read-only
   paths, capability drops, private tmp, restart policy, and secret injection.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Native deployment reaches feature parity with container deployment.
 - Hardening settings are tested by a smoke script.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.52.0: Backup, Restore, And Audit Continuity
 
@@ -1011,9 +1521,19 @@ Goal:
 - Verify backup and restore for storage, configuration, service keys, audit
   checkpoints, provider mappings, and certificate inventory.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Restore drills prove audit continuity and key availability.
 - Restored systems reject stale or conflicting provider state.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.53.0: HA, Failover, And Split-Brain Behavior
 
@@ -1021,9 +1541,19 @@ Goal:
 - Define leader election, lease fencing, storage isolation, provider locks,
   audit ordering, and failover recovery for HA deployments.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Split-brain tests cannot produce two active signing leases for one manifest.
 - Failover preserves audit continuity.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.54.0: Advanced Profile Gate
 
@@ -1032,9 +1562,19 @@ Goal:
   display, WebAuthn assurance, quorum, drift detection, tamper-evident audit,
   strict X.509 linting, and recovery ceremonies.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Claim matrix lists exactly which properties are proven and which are not.
 - Unsupported environments are denied or explicitly downgraded.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.55.0: SBOM, Provenance, And Artifact Inventory
 
@@ -1042,8 +1582,18 @@ Goal:
 - Generate SBOMs, build provenance, checksums, signatures where available, and
   artifact inventories for binaries, containers, schemas, and generated OpenAPI.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Release artifacts can be independently matched to source and dependency graph.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.56.0: Reproducible Build Gate
 
@@ -1051,9 +1601,19 @@ Goal:
 - Make release builds deterministic where practical and document remaining
   nondeterminism.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Rebuild comparison script passes for supported targets or records accepted
   exceptions.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.57.0: Broad Verification Suite
 
@@ -1062,9 +1622,19 @@ Goal:
   regressions, provider conformance, OpenAPI checks, cargo-deny, cargo-audit,
   SBOM generation, and deployment smoke tests.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - A single release gate script verifies the full suite.
 - Skipped checks require explicit documented justification.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.58.0: DAST, Fault Injection, And Adversarial Testing
 
@@ -1073,8 +1643,18 @@ Goal:
   partitions, clock faults, replay attempts, privilege confusion attempts, and
   audit tampering.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Adversarial tests are part of release qualification.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.59.0: Supply Chain And Hermetic CI
 
@@ -1082,9 +1662,19 @@ Goal:
 - Pin toolchains, lock dependencies, verify licenses, reject vulnerable
   dependencies, verify generated artifacts, and restrict CI permissions.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - CI can build from a clean checkout with minimal permissions.
 - Dependency updates require advisory and license checks.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.60.0: Capacity And Operational Readiness
 
@@ -1094,9 +1684,19 @@ Goal:
 - Define SLOs, alerts, runbooks, upgrade process, downgrade policy, and operator
   handoff material.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Load tests meet documented limits.
 - Runbooks cover common and security-critical incidents.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v0.61.0: Release Candidate And Independent Assessment
 
@@ -1104,10 +1704,20 @@ Goal:
 - Freeze public API, run all release gates, complete internal security review,
   resolve high and critical findings, and prepare an external review package.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Independent assessment findings are tracked.
 - No known critical or high security issue remains open.
 - Documentation claims match tested behavior.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
 
 ### v1.0.0: Stable Custody-Free CA Coordinator
 
@@ -1120,6 +1730,15 @@ Goal:
   hardware-backed evidence for hardware-required profiles; reproducible release
   artifacts; native and rootless Podman deployment paths; and EUPL-1.2 licensing.
 
+Deliverables:
+- Milestone implementation, documentation, configuration, scripts, fixtures, and evidence named in the goal are produced or updated.
+- Tests, negative cases, operational notes, and migration or ceremony artifacts needed to evaluate the milestone are included with the change set.
+
+Verification:
+- `scripts/checks.sh` passes from a clean checkout.
+- Milestone-specific unit, integration, smoke, conformance, fuzz, security, or ceremony checks named by the milestone pass and record their command output in release evidence.
+- Skipped or unavailable checks are documented with owner, reason, risk, and follow-up version before the milestone can advance.
+
 Exit criteria:
 - Public APIs are versioned and documented.
 - Two real provider adapters, or one real provider adapter plus an independently
@@ -1128,3 +1747,4 @@ Exit criteria:
 - Release gates pass from a clean checkout.
 - Security, operations, backup, restore, recovery, and incident documentation are
   complete enough for a production operator to run without source-code knowledge.
+- Milestone-scoped pentest or adversarial security review is completed; findings are fixed or tracked with explicit risk acceptance before advancing.
