@@ -3,8 +3,9 @@
 Trustheim is versioned as a security product, not as a feature demo. Every item
 below is pre-1.0 unless explicitly listed under `v1.0.0`. The purpose of the
 pre-1.0 line is to make unsafe shortcuts visible early, keep the public API
-provider-neutral, and prevent a working prototype from becoming a release
-candidate before custody, audit, identity, and recovery properties are proven.
+provider-neutral, keep storage replaceable by semantics rather than by product
+name, and prevent a working prototype from becoming a release candidate before
+custody, audit, identity, storage, and recovery properties are proven.
 
 ## Current Research Baseline
 
@@ -12,9 +13,7 @@ These versions were re-checked on 2026-07-17 before updating this plan:
 
 - Rust stable is 1.97.0, released on 2026-07-09.
 - OpenBao latest release is v2.5.4, released on 2026-05-20.
-- HashiCorp Vault latest observed release line is 1.21.x, with 1.21.4 announced
-  in March 2026 and later 1.21.x patch releases visible in upstream release
-  listings.
+- HashiCorp Vault latest observed release line is 1.21.x.
 
 Before any implementation milestone that pins toolchain or provider behavior,
 re-check Rust, crate versions, provider releases, HSM/PKCS#11 libraries, WebAuthn
@@ -24,14 +23,17 @@ no public API may expose a provider-specific concept as an authorization boundar
 
 ## Non-Negotiable Boundaries
 
-- Trustheim is a CA coordinator. It must not store exportable CA private keys.
+- Trustheim must never generate, receive, deliver, persist, log, retry, or cache
+  CA or subscriber private keys. Stable issuance is CSR-only. Trustheim may
+  retain opaque provider/HSM key references and public-key evidence, but never
+  private-key bytes.
 - The API server is the only component allowed to coordinate signing decisions.
 - Web and CLI clients call the API. They must not call CA providers directly.
 - Provider adapters implement Trustheim-owned traits. Providers do not define
   Trustheim's public model.
-- Storage is backend-neutral. The roadmap may require transactional semantics,
-  migrations, locks, uniqueness, optimistic versions, encryption, and backup
-  consistency, but it must not make one database product mandatory.
+- Storage is backend-neutral. Trustheim requires explicit transactional,
+  durability, locking, migration, and backup semantics; unsupported stores cannot
+  be enabled merely because they implement a partial trait.
 - One administrative trust domain per deployment is the default for v1. Tenant or
   deployment IDs must still be included in persistent keys, manifests, queries,
   audit entries, and provider mappings where future multi-tenancy would otherwise
@@ -78,19 +80,24 @@ Exit criteria:
 - Privacy model defines retention and redaction defaults.
 - Release gate fails when threat model sections are missing.
 
-### v0.3.0: Key Custody And HSM Boundary Model
+### v0.3.0: Key Custody, HSM Boundary, And Cryptographic Policy
 
 Goal:
 - Define supported custody tiers: software-dev, provider-managed, TPM-assisted,
   PKCS#11/HSM, and split offline root.
-- Define what evidence each tier must provide.
-- Make lower-tier modes explicit overlays that cannot be mistaken for the
-  highest-security profile.
+- Define allowed CA and subscriber key algorithms, RSA sizes and exponents,
+  approved curves, signature hash policy, entropy and random-number requirements,
+  serial-number entropy, client compatibility, provider/HSM compatibility, FIPS
+  claim requirements, deprecation, and algorithm migration.
+- Explicitly reject SHA-1, weak RSA, unsupported curves, ambiguous parameters,
+  and production claims for post-quantum or hybrid algorithms until promoted by a
+  dedicated advanced-profile gate.
 
 Exit criteria:
-- Custody tier appears in policy decisions, manifests, audit events, and provider
-  capability records.
+- Custody tier and cryptographic-policy digest appear in policy decisions,
+  manifests, audit events, and provider capability records.
 - Hardware-required profiles fail closed without acceptable evidence.
+- Profiles reference a versioned cryptographic policy.
 
 ### v0.4.0: CA Lifecycle And Ceremony Model
 
@@ -123,11 +130,18 @@ Goal:
   independent binaries where useful.
 - Support native execution and rootless Podman without making containers
   mandatory.
+- Define high-assurance isolation: parser and broker are separate processes with
+  different runtime identities; parser has no DB, provider, or signing authority;
+  broker has no session, WebAuthn, or general database credentials.
 
 Exit criteria:
 - Deployment docs cover native binaries and rootless Podman.
-- Process boundary docs state allowed callers and denied callers.
-- Parser and broker can be run with smaller privileges than the API server.
+- Web and CLI cannot reach parser or broker directly.
+- Broker egress is limited to configured providers.
+- Parser has no network egress unless explicitly required by a documented
+  profile.
+- A compromise simulation proves the parser cannot invoke signing.
+- Single-process mode is explicitly development-only.
 
 ### v0.7.0: Storage Architecture And Pending Artifacts
 
@@ -145,8 +159,11 @@ Exit criteria:
 - Storage trait documents required consistency and failure semantics.
 - Parser worker has no database credentials.
 - Coordinator persists parser results and pending artifact references.
-- Tests cover duplicate request IDs, state-generation conflicts, and retention
-  transitions using an in-memory conformance store.
+- A production storage adapter selected by ADR passes migrations from every
+  supported schema version, concurrency tests, crash/restart tests, durable
+  fencing tests, and backup-consistency tests.
+- The exact isolation level and lock/lease assumptions for each supported store
+  are documented.
 
 ### v0.8.0: Inter-Process Protocol Contract
 
@@ -225,29 +242,40 @@ Goal:
 Exit criteria:
 - Harness can run without a real provider.
 - Harness proves providers cannot bypass local policy, manifest, audit, quorum,
-  or output verification requirements.
+  drift detection, reconciliation, or output verification requirements.
 
-### v0.14.0: OpenAPI Contract Validation
+### v0.14.0: Public API Resource Lifecycle And OpenAPI Validation
 
 Goal:
 - Generate and validate a stable OpenAPI document from the API server.
-- Add negative contract tests for request sizes, malformed JSON, denied fields,
-  content types, idempotency keys, and redacted errors.
+- Define resource lifecycle for create certificate request, retrieve status,
+  bounded list/pagination, cancel before signing, approve, reject, veto,
+  withdraw, expire, retrieve issued certificate, revoke, and inventory queries.
+- Define idempotency-key scope and expiry, conditional updates/state generation,
+  enumeration-resistant public identifiers, retention and tombstone semantics,
+  and requester visibility into guardian identities.
 
 Exit criteria:
 - OpenAPI diff is reviewed intentionally.
 - CLI smoke tests use the published API shape.
+- Negative contract tests cover request sizes, malformed JSON, denied fields,
+  content types, idempotency, conditional updates, and redacted errors.
 
-### v0.15.0: HTTP Transport And Request Hardening
+### v0.15.0: Inbound HTTP/TLS Transport And Request Hardening
 
 Goal:
 - Add strict request limits, timeout layers, trace IDs, content-type checks,
   body limits, compression policy, CORS policy, and security headers.
+- Define inbound TLS or explicitly trusted terminating proxy behavior, trusted
+  proxy allow-list, forwarded header handling, host validation, cookie Secure,
+  HttpOnly, SameSite, session fixation prevention, absolute and idle session
+  expiry, CSRF handling, liveness/readiness/authenticated diagnostics, and
+  graceful shutdown of in-flight approval and signing leases.
 
 Exit criteria:
 - Oversized and slow requests are rejected.
 - Errors remain provider-neutral and redact sensitive input.
-- DAST smoke tests cover malformed HTTP cases.
+- DAST smoke tests cover malformed HTTP and proxy-header cases.
 
 ### v0.16.0: Identity, Sessions, Recovery, And Route Authorization
 
@@ -262,30 +290,66 @@ Exit criteria:
 - Route tests cover every privileged endpoint.
 - Suspended or deprovisioned guardians cannot approve.
 - Minimum guardian set and recovery rules are documented and tested.
+- Distinct approvers mean distinct active guardian identities established through
+  the documented identity-proofing procedure, not a cryptographic claim about
+  distinct humans.
 
 ### v0.17.0: WebAuthn Enrollment And Credential Lifecycle
 
 Goal:
 - Add WebAuthn registration and authentication for administrative identities.
 - Bind credentials to identity records, authenticator metadata, backup state,
-  and revocation state.
+  guardian-set epoch, credential epoch, and revocation state.
 
 Exit criteria:
 - Enrollment requires an authorized ceremony.
+- Credential ID and public-key uniqueness are enforced across identities.
 - Credential revocation takes effect before new approvals.
 - Tests cover replayed and cross-user assertions.
 
-### v0.18.0: Hardware Attestation And Assurance Tiers
+### v0.18.0: WebAuthn Verification, Attestation, And Assurance Tiers
 
 Goal:
-- Record authenticator attestation where available.
+- Verify exact RP ID hash, allowed origin and top-origin policy, challenge,
+  ceremony type, user presence, required user verification, credential public-key
+  algorithm, backup eligibility and backup state, signature-counter anomalies,
+  attestation format and chain, AAGUID policy, FIDO metadata trust roots,
+  metadata freshness, status, revocation, and outage behavior.
 - Express policy in assurance tiers, not vendor names.
 
 Exit criteria:
-- Profiles can require attested hardware-backed credentials.
-- Missing attestation downgrades or denies according to policy.
+- Missing, stale, revoked, or unverifiable attestation denies a
+  hardware-required profile.
+- Selecting a lower assurance tier requires an explicit policy decision before
+  manifest creation; it is never an authentication-time fallback.
 
-### v0.19.0: Certificate Profile And Local Policy Engine
+### v0.19.0: Strict PKCS#10 CSR Parser
+
+Goal:
+- Parse CSR DER in an isolated worker with strict size, algorithm, attribute,
+  extension, and string handling.
+- Normalize names and SANs before policy evaluation.
+- Define `ValidatedCsr` and parser-result vectors before policy code depends on
+  them.
+
+Exit criteria:
+- Malformed, oversized, ambiguous, and duplicate CSR fields are rejected.
+- Parser result is authenticated, bound to the CSR digest, and returned to the
+  coordinator.
+
+### v0.20.0: CSR Request Semantic Validation
+
+Goal:
+- Validate CSR semantics before profile policy: requested subject, CN behavior,
+  DNS/IP/URI/email SAN normalization, IDNA handling, SPIFFE URI rules where
+  enabled, requested extensions, public-key algorithm, and key-usage intent.
+
+Exit criteria:
+- Policy receives only normalized, validated CSR facts.
+- Tests cover forbidden CA requests, duplicate names, unknown critical CSR
+  extensions, unsupported algorithms, and ambiguous encodings.
+
+### v0.21.0: Certificate Profile And Local Policy Engine
 
 Goal:
 - Move local policy before operation manifests, WebAuthn challenges, quorum, and
@@ -300,21 +364,28 @@ Exit criteria:
 - Policy result is included in the canonical operation manifest.
 - Denial tests cover subject, SAN, TTL, issuer, algorithm, and custody mismatch.
 
-### v0.20.0: Canonical Operation Manifest
+### v0.22.0: Canonical Operation Manifest
 
 Goal:
 - Define canonical bytes for all high-value operations.
-- Include request digest, normalized subject/SAN, issuer fingerprint, policy
-  decision digest, custody tier, requester, approvers, time bounds, provider
-  mapping, artifact references, and expected output constraints.
+- Include operation ID, nonce, request digest, normalized subject/SAN facts,
+  issuer fingerprint, policy decision digest, cryptographic-policy digest,
+  custody tier, requester identity, eligible guardian-set digest and epoch,
+  quorum threshold, required roles, separation-of-duty constraints,
+  approval-window ID and expiry, time bounds, provider mapping, artifact
+  references, and expected output constraints.
+- Store actual approvers in separate approval records that reference the
+  immutable manifest digest.
 
 Exit criteria:
-- Same logical request produces the same manifest bytes.
-- Non-canonical encodings are rejected.
+- The same fully specified manifest field set has exactly one canonical byte
+  encoding.
+- Every operation contains a fresh operation ID and nonce, so separate operations
+  remain cryptographically distinct.
 - Manifest digest appears in WebAuthn challenges, quorum approvals, provider
   calls, audit events, and output records.
 
-### v0.21.0: Trusted Transaction Display
+### v0.23.0: Trusted Transaction Display
 
 Goal:
 - Prevent a compromised web UI from silently changing high-value operations.
@@ -326,11 +397,11 @@ Exit criteria:
 - Highest-security profiles require independent client or workstation display.
 - Tests prove display receipts fail if manifest bytes are changed.
 
-### v0.22.0: WebAuthn Step-Up And Replay Resistance
+### v0.24.0: WebAuthn Step-Up And Replay Resistance
 
 Goal:
-- Require step-up authentication for certificate issuance, revocation, provider
-  mapping changes, policy changes, and guardian changes.
+- Require step-up authentication for certificate issuance, provider mapping
+  changes, policy changes, guardian changes, and high-risk revocation paths.
 - Bind challenge bytes to canonical manifest digests, route, identity, session,
   time window, and nonce.
 
@@ -338,7 +409,7 @@ Exit criteria:
 - Captured assertions cannot be replayed across routes or manifests.
 - Expired challenges fail closed.
 
-### v0.23.0: Multi-Party Quorum State Machine
+### v0.25.0: Multi-Party Quorum State Machine
 
 Goal:
 - Implement pending, approved, rejected, vetoed, withdrawn, expired, completed,
@@ -350,7 +421,7 @@ Exit criteria:
 - The requester cannot satisfy approver requirements when policy forbids it.
 - Guardian unavailability and minimum guardian count are modeled explicitly.
 
-### v0.24.0: Quorum Substitution, Concurrency, And Recovery
+### v0.26.0: Quorum Substitution, Concurrency, And Recovery
 
 Goal:
 - Handle concurrent approvals, duplicate submissions, guardian replacement,
@@ -360,7 +431,7 @@ Exit criteria:
 - State-generation tests prevent lost approvals and double completion.
 - Recovery requires a documented ceremony and audit event.
 
-### v0.25.0: Secure Time Semantics
+### v0.27.0: Secure Time Semantics
 
 Goal:
 - Define trusted wall-clock sources, maximum skew, monotonic local deadlines,
@@ -373,11 +444,11 @@ Exit criteria:
   bounded by policy.
 - Tests simulate clock rollback, jump forward, and provider/database skew.
 
-### v0.26.0: Tamper-Evident Audit Ledger
+### v0.28.0: Tamper-Evident Audit Ledger And Independent Anchoring
 
 Goal:
-- Implement append-only audit records with hash chaining or equivalent external
-  checkpointing.
+- Implement canonical hash-linked or Merkle-accumulated local events plus signed
+  checkpoints persisted to an independent append-only or WORM destination.
 - Cover intent, policy decision, manifest creation, challenge, approval, veto,
   withdrawal, provider call, output verification, drift, reconciliation, and
   access events.
@@ -386,43 +457,60 @@ Goal:
 
 Exit criteria:
 - Tampering with an audit record is detected.
-- Audit checkpoints survive service-key rotation.
 - Database rollback alone cannot hide or rewrite issuance history.
+- Audit checkpoints survive service-key rotation.
+- Provider audit correlation includes authorized intent before provider access,
+  provider request identifier, provider audit-event confirmation where available,
+  output digest, and reconciliation result.
 
-### v0.27.0: Backend mTLS Transport
+### v0.29.0: Backend mTLS Transport
 
 Goal:
-- Implement provider transport with mTLS, pinned trust roots, explicit SNI/SPIFFE
-  or equivalent identity checks, certificate rotation, and denied fallback.
+- Implement provider transport with mTLS, pinned private trust roots, explicit
+  SNI/SPIFFE or equivalent identity checks, TLS 1.3 by default, justified TLS 1.2
+  compatibility only where required, allowed cipher suites, signature algorithms,
+  key-exchange groups, client certificate EKU and identity checks, redirect
+  denial, no environment proxy discovery, timeouts, response-size limits,
+  rotation overlap, and expiry handling.
 
 Exit criteria:
 - Plain HTTP provider connections are impossible outside explicit dev mode.
+- Host root-store fallback is impossible unless explicitly configured for a lower
+  assurance profile.
 - Provider identity mismatch fails closed.
 
-### v0.28.0: Provider Credential Broker And Lifecycle
+### v0.30.0: Provider Credential Broker And Lifecycle
 
 Goal:
-- Issue short-lived provider credentials only for authorized operations.
-- Scope credentials to provider, issuer, manifest digest, operation type, and
-  time window.
+- Issue opaque single-use broker grants only for authorized operations.
+- Distinguish provider-enforced restrictions, such as issuer path, role,
+  operation type, TTL, and use count, from broker-enforced restrictions, such as
+  manifest binding, single-use handle, operation state, and caller identity.
+- Attach manifest digest as safe metadata or header where the provider supports
+  it without claiming cross-provider cryptographic token binding.
 
 Exit criteria:
-- Credentials cannot be reused for a different operation.
+- Broker grants cannot be reused for a different operation.
+- Underlying provider tokens are never exposed to web, CLI, parser, or public API
+  callers.
 - Broker logs are redacted and independently auditable.
 
-### v0.29.0: First Provider Bootstrap
+### v0.31.0: First Provider Bootstrap
 
 Goal:
 - Implement the first real provider bootstrap selected by ADR and conformance
   readiness, without exposing provider-specific public API.
-- Automate dev bootstrap for local testing and document production boundaries.
+- Automate disposable dev bootstrap for local testing and document production
+  boundaries.
 
 Exit criteria:
-- Bootstrap creates least-privilege paths, roles, issuers, audit sinks, and
-  health checks for the selected provider.
-- Provider bootstrap produces no public API changes.
+- Dev bootstrap may create local disposable audit sinks.
+- Production audit sinks are provisioned declaratively or out of band.
+- Runtime and routine bootstrap credentials cannot mutate production audit sinks.
+- Trustheim verifies audit readiness but cannot auto-repair it with runtime
+  credentials.
 
-### v0.30.0: First Provider ACL And Declarative Audit Policy
+### v0.32.0: First Provider ACL And Declarative Audit Policy
 
 Goal:
 - Codify provider-side least privilege and audit settings as declarative policy.
@@ -433,7 +521,7 @@ Exit criteria:
 - Tests prove denied provider paths remain denied.
 - Provider audit settings are verified at startup.
 
-### v0.31.0: Provider Policy Drift Detection
+### v0.33.0: Provider Policy Drift Detection
 
 Goal:
 - Store canonical expected provider configuration for roles, issuer mappings,
@@ -448,28 +536,19 @@ Exit criteria:
 - Expected issuer public-key fingerprint is included in manifests.
 - Signing is denied when provider state differs from the approved model.
 
-### v0.32.0: First Provider Runtime Adapter
+### v0.34.0: First Provider Runtime Adapter
 
 Goal:
 - Implement health, capability discovery, issuer resolution, signing, evidence
-  extraction, revocation support, and reconciliation hooks for the first provider.
+  extraction, revocation support, audit correlation, and reconciliation hooks for
+  the first provider.
 
 Exit criteria:
 - Adapter passes provider conformance tests.
-- Adapter cannot bypass local policy, manifest, quorum, audit, or drift checks.
+- Adapter cannot bypass local policy, manifest, quorum, audit, drift checks,
+  reconciliation, or output verification.
 
-### v0.33.0: Strict PKCS#10 CSR Parser
-
-Goal:
-- Parse CSR DER in an isolated worker with strict size, algorithm, attribute,
-  extension, and string handling.
-- Normalize names and SANs before policy evaluation.
-
-Exit criteria:
-- Malformed, oversized, ambiguous, and duplicate CSR fields are rejected.
-- Parser result is bound to the CSR digest and returned to the coordinator.
-
-### v0.34.0: X.509 Semantic Linting
+### v0.35.0: X.509 Semantic Linting
 
 Goal:
 - Validate BasicConstraints, CA bit rejection, pathLenConstraint, name
@@ -484,29 +563,60 @@ Exit criteria:
   rejected.
 - Interop vectors cover OpenSSL, rustls, webpki, Java, and Go where practical.
 
-### v0.35.0: Fuzzed CSR And Name Parsers
+### v0.36.0: Fuzzed CSR, Name, Policy, And Manifest Parsers
 
 Goal:
 - Fuzz CSR parsing, name normalization, IDNA, URI SAN, IP SAN, profile parsing,
-  and manifest canonicalization.
+  policy decisions, and manifest canonicalization.
 
 Exit criteria:
 - Fuzz corpus is checked in with regression seeds.
 - Sanitizer or fuzz jobs are documented in the release gate.
 
-### v0.36.0: Dry-Run CSR Signing MVP
+### v0.37.0: Transactional Reconciliation Before Provider Effects
 
 Goal:
-- Wire request creation, parsing, policy, manifest, WebAuthn step-up, quorum,
-  audit intent, provider drift check, and provider signing in a dry-run or
-  internal-only mode.
+- Make provider effects and audit/storage state transactionally coherent before
+  any externally usable signing or revocation endpoint exists: persist
+  authorized intent, anchor audit, acquire fenced signing lease, call provider,
+  verify output, persist result, anchor completion, and expose output.
+- Add outbox and reconciliation handling for crashes after provider signing or
+  revocation.
+- Prefer at-most-one active authorization lease and deterministic
+  reconciliation. Where a provider cannot support lookup or idempotency, detect
+  and quarantine possible duplicate issuance.
+
+Exit criteria:
+- Crash tests cover every transition around provider calls.
+- Ambiguous completions require reconciliation before retry.
+- v0.38 and later provider-effect milestones are lab-only unless this gate
+  passes.
+
+### v0.38.0: Real HSM-Backed Signing Evidence
+
+Goal:
+- Integrate real HSM, PKCS#11, KMS, or provider-backed hardware evidence for the
+  highest custody profile before production intermediate creation, rollover, or
+  externally supported issuance claims.
+
+Exit criteria:
+- Hardware-required profiles fail without current evidence.
+- Evidence is bound to manifest, issuer, and provider output.
+- Earlier SoftHSM or provider-key paths remain lab or lower-tier profiles only.
+
+### v0.39.0: Dry-Run CSR Signing MVP
+
+Goal:
+- Wire request creation, parsing, policy, manifest, trusted display, WebAuthn
+  step-up, quorum, audit intent, provider drift check, reconciliation, and
+  provider signing in a dry-run or internal-only mode.
 
 Exit criteria:
 - No externally supported signing release is allowed at this milestone.
 - Dry-run proves the full authorization path without publishing a production
   signing claim.
 
-### v0.37.0: Certificate Output Verification And Inventory
+### v0.40.0: Certificate Output Verification And Inventory
 
 Goal:
 - Verify provider output against the manifest and policy decision before
@@ -515,31 +625,49 @@ Goal:
   SAN digest, policy digest, manifest digest, and provider evidence reference.
 
 Exit criteria:
-- First externally usable signing endpoint is blocked until this gate passes.
+- First externally usable signing endpoint is blocked until reconciliation,
+  hardware-evidence requirements, and this gate pass.
 - Mismatched provider output is rejected and audited.
 
-### v0.38.0: Revocation Workflow
+### v0.41.0: Revocation Workflow
 
 Goal:
 - Implement provider-neutral revocation requests, approval policy, provider call,
-  output verification, audit records, and inventory state transitions.
+  reconciliation, output verification, audit records, and inventory state
+  transitions.
+- Define a risk-based authorization matrix: owner/requester rapid
+  self-revocation, security-operator emergency revocation with strong
+  authentication and immediate audit, stronger authorization for unrelated
+  certificate revocation, and isolated CA/intermediate revocation ceremonies.
 
 Exit criteria:
-- Revocation cannot bypass local policy and quorum.
-- Repeated revocation requests are idempotent.
+- Revocation cannot bypass its configured authorization matrix.
+- Repeated revocation requests are idempotent or reconciled before retry.
 
-### v0.39.0: CRL, OCSP, And ACME Policy
+### v0.42.0: CRL And OCSP Publication
 
 Goal:
-- Define publication and freshness policy for CRL and OCSP behavior.
-- Decide whether ACME requests must flow through Trustheim policy, manifest,
-  quorum, and audit, or whether direct provider ACME is explicitly out of scope.
+- Implement mandatory CRL/OCSP freshness monitoring, publication behavior,
+  delegated responder or CRL-signing key custody, rotation, outage policy, and
+  audit records.
 
 Exit criteria:
-- Direct provider ACME cannot silently bypass Trustheim claims.
-- Freshness and outage behavior are documented and tested.
+- Freshness failures are visible and policy-bound.
+- Responder and CRL-signing keys follow the custody and service-key lifecycle.
 
-### v0.40.0: Root, Intermediate, Issuer Rotation, And Rollover
+### v0.43.0: Optional ACME Policy Gate
+
+Goal:
+- Decide whether ACME is supported through Trustheim-controlled policy,
+  manifest, inventory, and audit paths.
+- Keep direct provider ACME explicitly out of v1 unless Trustheim can prove it
+  cannot bypass local policy, inventory, and audit.
+
+Exit criteria:
+- ACME remains disabled or experimental unless it passes the same policy,
+  provider, audit, and inventory gates as other issuance paths.
+
+### v0.44.0: Root, Intermediate, Issuer Rotation, And Rollover
 
 Goal:
 - Implement controlled issuer rollover and decommissioning for runtime-managed
@@ -547,9 +675,10 @@ Goal:
 
 Exit criteria:
 - Leaf certificates cannot outlive allowed issuer windows.
+- Production rollover requires the applicable hardware-evidence profile.
 - Rollover emits signed manifests and audit records.
 
-### v0.41.0: Privacy-Preserving Telemetry
+### v0.45.0: Privacy-Preserving Telemetry
 
 Goal:
 - Add metrics that expose operational health without leaking subject names, SANs,
@@ -559,32 +688,7 @@ Exit criteria:
 - Metrics are reviewed against the data classification table.
 - Sensitive labels are denied by tests.
 
-### v0.42.0: Concurrency, Idempotency, And Ambiguous-Recovery
-
-Goal:
-- Make provider effects and audit/storage state transactionally coherent:
-  persist authorized intent, anchor audit, acquire fenced signing lease, call
-  provider, verify output, persist result, anchor completion, and expose output.
-- Add outbox and reconciliation handling for crashes after provider signing.
-- Prefer at-most-one active authorization lease and deterministic
-  reconciliation. Where a provider cannot support lookup or idempotency, detect
-  and quarantine possible duplicate issuance.
-
-Exit criteria:
-- Crash tests cover every transition around provider calls.
-- Ambiguous completions require reconciliation before retry.
-
-### v0.43.0: Real HSM-Backed Signing Evidence
-
-Goal:
-- Integrate real HSM, PKCS#11, KMS, or provider-backed hardware evidence for the
-  highest custody profile.
-
-Exit criteria:
-- Hardware-required profiles fail without current evidence.
-- Evidence is bound to manifest, issuer, and provider output.
-
-### v0.44.0: Explicit Lower-Tier Overlays And Break-Glass
+### v0.46.0: Explicit Lower-Tier Overlays And Break-Glass
 
 Goal:
 - Implement development, lab, and emergency overlays that downgrade claims
@@ -595,19 +699,23 @@ Exit criteria:
 - Lower-tier overlays cannot be mistaken for the highest-security profile.
 - Break-glass leaves signed audit evidence and expires automatically.
 
-### v0.45.0: Second Provider Proof
+### v0.47.0: Second Provider Proof
 
 Goal:
-- Add a second real provider adapter or a high-fidelity external provider
-  simulator to prove Trustheim's API, policy, storage, audit, and lifecycle model
-  are not bound to the first provider.
+- Prove Trustheim's API, policy, storage, audit, credential, issuer, capability,
+  and lifecycle model are not bound to the first provider.
+- Require either two real provider adapters, or one real provider adapter plus an
+  independently specified adapter using meaningfully different credential, audit,
+  issuer, and capability semantics.
 
 Exit criteria:
-- Provider conformance harness passes for two implementations.
+- Provider conformance harness passes for the required independent providers.
+- A fake provider remains useful for tests but is not accepted as the sole
+  provider-neutrality proof.
 - Public API and storage schema do not gain provider-specific authorization
   concepts.
 
-### v0.46.0: Web Client
+### v0.48.0: Web Client
 
 Goal:
 - Build the separate web application as an API client.
@@ -618,7 +726,7 @@ Exit criteria:
 - Web app has no provider credentials or provider crate dependencies.
 - High-value operations display signed manifest receipts.
 
-### v0.47.0: CLI Client
+### v0.49.0: CLI Client
 
 Goal:
 - Build the separate CLI as an API client for automation and ceremonies.
@@ -629,7 +737,7 @@ Exit criteria:
 - CLI can operate without the web app.
 - CLI verifies signed receipts before approval commands.
 
-### v0.48.0: Rootless Podman Profiles
+### v0.50.0: Rootless Podman Profiles
 
 Goal:
 - Provide rootless Podman deployment profiles for API, web, parser, broker,
@@ -639,7 +747,7 @@ Exit criteria:
 - Containers run without root privileges.
 - Provider network is isolated from web and CLI containers.
 
-### v0.49.0: Native Binary And systemd Hardening
+### v0.51.0: Native Binary And systemd Hardening
 
 Goal:
 - Provide native binary deployment with systemd units, sandboxing, read-only
@@ -649,7 +757,7 @@ Exit criteria:
 - Native deployment reaches feature parity with container deployment.
 - Hardening settings are tested by a smoke script.
 
-### v0.50.0: Backup, Restore, And Audit Continuity
+### v0.52.0: Backup, Restore, And Audit Continuity
 
 Goal:
 - Verify backup and restore for storage, configuration, service keys, audit
@@ -659,7 +767,7 @@ Exit criteria:
 - Restore drills prove audit continuity and key availability.
 - Restored systems reject stale or conflicting provider state.
 
-### v0.51.0: HA, Failover, And Split-Brain Behavior
+### v0.53.0: HA, Failover, And Split-Brain Behavior
 
 Goal:
 - Define leader election, lease fencing, storage isolation, provider locks,
@@ -669,7 +777,7 @@ Exit criteria:
 - Split-brain tests cannot produce two active signing leases for one manifest.
 - Failover preserves audit continuity.
 
-### v0.52.0: Advanced Profile Gate
+### v0.54.0: Advanced Profile Gate
 
 Goal:
 - Lock the strongest supported profile end to end: hardware custody, trusted
@@ -680,7 +788,7 @@ Exit criteria:
 - Claim matrix lists exactly which properties are proven and which are not.
 - Unsupported environments are denied or explicitly downgraded.
 
-### v0.53.0: SBOM, Provenance, And Artifact Inventory
+### v0.55.0: SBOM, Provenance, And Artifact Inventory
 
 Goal:
 - Generate SBOMs, build provenance, checksums, signatures where available, and
@@ -689,7 +797,7 @@ Goal:
 Exit criteria:
 - Release artifacts can be independently matched to source and dependency graph.
 
-### v0.54.0: Reproducible Build Gate
+### v0.56.0: Reproducible Build Gate
 
 Goal:
 - Make release builds deterministic where practical and document remaining
@@ -699,7 +807,7 @@ Exit criteria:
 - Rebuild comparison script passes for supported targets or records accepted
   exceptions.
 
-### v0.55.0: Broad Verification Suite
+### v0.57.0: Broad Verification Suite
 
 Goal:
 - Run formatting, clippy, unit tests, integration tests, property tests, fuzz
@@ -710,7 +818,7 @@ Exit criteria:
 - A single release gate script verifies the full suite.
 - Skipped checks require explicit documented justification.
 
-### v0.56.0: DAST, Fault Injection, And Adversarial Testing
+### v0.58.0: DAST, Fault Injection, And Adversarial Testing
 
 Goal:
 - Add dynamic HTTP tests, malformed provider responses, storage faults, network
@@ -720,7 +828,7 @@ Goal:
 Exit criteria:
 - Adversarial tests are part of release qualification.
 
-### v0.57.0: Supply Chain And Hermetic CI
+### v0.59.0: Supply Chain And Hermetic CI
 
 Goal:
 - Pin toolchains, lock dependencies, verify licenses, reject vulnerable
@@ -730,7 +838,7 @@ Exit criteria:
 - CI can build from a clean checkout with minimal permissions.
 - Dependency updates require advisory and license checks.
 
-### v0.58.0: Capacity And Operational Readiness
+### v0.60.0: Capacity And Operational Readiness
 
 Goal:
 - Benchmark issuance, approval, audit, storage, provider latency, and failure
@@ -742,7 +850,7 @@ Exit criteria:
 - Load tests meet documented limits.
 - Runbooks cover common and security-critical incidents.
 
-### v0.59.0: Release Candidate And Independent Assessment
+### v0.61.0: Release Candidate And Independent Assessment
 
 Goal:
 - Freeze public API, run all release gates, complete internal security review,
@@ -758,15 +866,17 @@ Exit criteria:
 Goal:
 - Release Trustheim as a stable API-first CA coordinator with separate API, web,
   and CLI applications; provider-neutral backend support; storage-neutral
-  persistence requirements; strong custody boundaries; quorum approvals;
-  tamper-evident audit; trusted transaction display; strict X.509 validation;
-  reproducible release artifacts; native and rootless Podman deployment paths;
-  and EUPL-1.2 licensing.
+  persistence requirements with at least one production storage adapter; strong
+  custody boundaries; quorum approvals; tamper-evident audit with independent
+  anchoring; trusted transaction display; strict X.509 validation; real
+  hardware-backed evidence for hardware-required profiles; reproducible release
+  artifacts; native and rootless Podman deployment paths; and EUPL-1.2 licensing.
 
 Exit criteria:
 - Public APIs are versioned and documented.
-- At least two provider implementations or one provider plus a high-fidelity
-  external simulator pass the conformance harness.
+- Two real provider adapters, or one real provider adapter plus an independently
+  specified adapter with meaningfully different semantics, pass the conformance
+  harness.
 - Release gates pass from a clean checkout.
 - Security, operations, backup, restore, recovery, and incident documentation are
   complete enough for a production operator to run without source-code knowledge.

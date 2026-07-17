@@ -40,10 +40,12 @@ fi
 
 echo "checks: version ladder"
 grep -q "v0.7.0: Storage Architecture And Pending Artifacts" docs/versioning-plan.md
-grep -q "v0.19.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
-grep -q "v0.31.0: Provider Policy Drift Detection" docs/versioning-plan.md
-grep -q "v0.45.0: Second Provider Proof" docs/versioning-plan.md
-grep -q "v0.59.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
+grep -q "v0.19.0: Strict PKCS#10 CSR Parser" docs/versioning-plan.md
+grep -q "v0.21.0: Certificate Profile And Local Policy Engine" docs/versioning-plan.md
+grep -q "v0.33.0: Provider Policy Drift Detection" docs/versioning-plan.md
+grep -q "v0.37.0: Transactional Reconciliation Before Provider Effects" docs/versioning-plan.md
+grep -q "v0.47.0: Second Provider Proof" docs/versioning-plan.md
+grep -q "v0.61.0: Release Candidate And Independent Assessment" docs/versioning-plan.md
 grep -q "v1.0.0: Stable Custody-Free CA Coordinator" docs/versioning-plan.md
 
 echo "checks: source list"
